@@ -2,7 +2,7 @@
 // KONFIGURASI SUPABASE (Ganti dengan kredensial Anda)
 // ==========================================
 const SUPABASE_URL = "https://foaujmoctmcadmonfslv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvYXVqbW9jdG1jYWRtb25mc2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyNzY1NTIsImV4cCI6MjEwMzg1MjU1Mn0.TfGy9GcIrQGKTLO7i16iLW-ijIANdI5bci7dp-zfYKU";
+const SUPABASE_ANON_KEY = "sb_publishable_LoCWbn2KdXSJfjykpy1Dsw_Poyk6eEe";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
