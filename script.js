@@ -1,10 +1,9 @@
 // ==========================================
-// KONFIGURASI SUPABASE (Ganti dengan kredensial Anda)
+// KONFIGURASI SUPABASE (Ganti dengan URL & Key Proyek Anda)
 // ==========================================
 const SUPABASE_URL = "https://foaujmoctmcadmonfslv.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_LoCWbn2KdXSJfjykpy1Dsw_Poyk6eEe";
 
-// Menggunakan supabaseClient agar tidak bentrok dengan window.supabase
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Variabel Global Data
@@ -58,7 +57,7 @@ function setMode(modeState) {
 }
 
 // ==========================================
-// LOGIKA LOGIN
+// LOGIKA LOGIN (Sesuai prosesLogin() Code.gs)
 // ==========================================
 window.onload = function() {
   const sessionToko = sessionStorage.getItem('loginToko');
@@ -87,7 +86,7 @@ async function prosesLogin() {
   try {
     const { data, error } = await supabaseClient
       .from('stores')
-      .select('store_name')
+      .select('nama_toko')
       .eq('username', user)
       .eq('password', pass)
       .maybeSingle();
@@ -98,20 +97,20 @@ async function prosesLogin() {
     if (error) {
       console.error("Supabase Error:", error);
       alertBox.className = 'alert alert-danger mb-4 shadow-sm';
-      alertBox.innerText = `Error Database: ${error.message}`;
+      alertBox.innerText = `Error: ${error.message}`;
       alertBox.classList.remove('d-none');
       return;
     }
 
     if (!data) {
       alertBox.className = 'alert alert-danger mb-4 shadow-sm';
-      alertBox.innerText = 'Username atau password salah / tidak ditemukan!';
+      alertBox.innerText = 'Username atau Password salah!';
       alertBox.classList.remove('d-none');
       return;
     }
 
     alertBox.classList.add('d-none');
-    namaTokoAktif = data.store_name;
+    namaTokoAktif = data.nama_toko;
     sessionStorage.setItem('loginToko', namaTokoAktif); 
     bukaAplikasi(namaTokoAktif);
 
@@ -119,11 +118,14 @@ async function prosesLogin() {
     btn.disabled = false;
     btn.innerHTML = 'Masuk <i class="bi bi-box-arrow-in-right"></i>';
     alertBox.className = 'alert alert-danger mb-4 shadow-sm';
-    alertBox.innerText = `Koneksi Gagal: ${err.message || 'Tidak dapat terhubung'}`;
+    alertBox.innerText = 'Gagal terhubung ke database.';
     alertBox.classList.remove('d-none');
   }
 }
 
+// ==========================================
+// AMBIL BARANG (Sesuai getDaftarBarang() Code.gs)
+// ==========================================
 async function bukaAplikasi(namaToko) {
   document.getElementById('pageLogin').classList.add('d-none');
   document.getElementById('pageMainApp').classList.remove('d-none');
@@ -136,14 +138,13 @@ async function bukaAplikasi(namaToko) {
   try {
     const { data, error } = await supabaseClient
       .from('items')
-      .select('id, name, stock')
-      .order('name', { ascending: true });
+      .select('id, nama, stok, satuan')
+      .order('nama', { ascending: true });
 
     if (error) throw error;
 
     if (data) {
-      const formatted = data.map(i => ({ id: i.id, nama: i.name, stok: i.stock }));
-      siapkanData(formatted);
+      siapkanData(data);
     }
   } catch (error) {
     console.error("Gagal load daftar barang:", error);
@@ -177,7 +178,7 @@ function switchTab(tabName) {
 }
 
 // ==========================================
-// FORM ORDER & KERANJANG
+// FORM ORDER & AUTOCOMPLETE PENCARIAN
 // ==========================================
 function siapkanData(data) {
   daftarBarangGlobal = data;
@@ -224,7 +225,7 @@ inputBarang.addEventListener('input', function() {
       hasilPencarian.slice(0, 50).forEach(item => {
         const div = document.createElement('div');
         let badgeClass = item.stok > 0 ? 'bg-success text-white' : 'bg-danger text-white';
-        let stokText = item.stok > 0 ? `Sisa: ${item.stok}` : 'Habis 😭';
+        let stokText = item.stok > 0 ? `Sisa: ${item.stok} ${item.satuan || ''}` : 'Habis 😭';
         if (item.stok <= 0) { div.style.opacity = '0.5'; }
         
         div.className = 'custom-dropdown-item';
@@ -270,7 +271,7 @@ function tambahKeKeranjang() {
   const idx = keranjang.findIndex(item => item.namaBarang === valBarang);
   let totalDiminta = inputJumlah;
   if (idx !== -1) { totalDiminta += keranjang[idx].jumlah; }
-  if (totalDiminta > dataAsli.stok) { alert(`Stok tidak cukup! Sisa cuma ${dataAsli.stok}. 😅`); return; }
+  if (totalDiminta > dataAsli.stok) { alert(`Stok tidak cukup! Sisa cuma ${dataAsli.stok} ${dataAsli.satuan || ''}. 😅`); return; }
 
   if (idx !== -1) {
     keranjang[idx].jumlah += inputJumlah;
@@ -304,7 +305,7 @@ function renderKeranjang() {
 }
 
 // ==========================================
-// SIMPAN ORDER
+// SIMPAN PESANAN (Sesuai simpanPesanan() Code.gs)
 // ==========================================
 async function kirimOrder() {
   const catatan = document.getElementById('catatan').value.trim();
@@ -328,7 +329,17 @@ async function kirimOrder() {
     return { idBarang: idSplit, namaBarang: namaSplit, jumlah: item.jumlah };
   });
 
-  const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+  // Generator format ID persis seperti di Code.gs: ORD-DDMMYY-HHMMSS
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const yy = String(now.getFullYear()).slice(-2);
+  const hhTime = String(now.getHours()).padStart(2, '0');
+  const mmTime = String(now.getMinutes()).padStart(2, '0');
+  const ssTime = String(now.getSeconds()).padStart(2, '0');
+  
+  const idPesanan = `ORD-${dd}${month}${yy}-${hhTime}${mmTime}${ssTime}`;
+  const tanggalFormat = now.toLocaleString('id-ID');
   const totalQty = keranjang.reduce((acc, curr) => acc + curr.jumlah, 0);
 
   btnSubmit.disabled = true;
@@ -338,12 +349,13 @@ async function kirimOrder() {
     const { error } = await supabaseClient
       .from('orders')
       .insert([{
-        id: orderId,
-        store_name: namaTokoAktif,
-        notes: catatan || '-',
+        id: idPesanan,
+        nama_toko: namaTokoAktif,
+        catatan: catatan || '-',
         status: 'Pending',
         items: itemsPayload,
-        total_qty: totalQty
+        total_qty: totalQty,
+        tanggal: tanggalFormat
       }]);
 
     btnSubmit.disabled = false;
@@ -352,7 +364,7 @@ async function kirimOrder() {
     if (error) throw error;
 
     alertBox.className = 'alert alert-success mt-3 shadow-sm';
-    alertBox.innerHTML = `🎉 Yeay! Pesanan terkirim.<br>ID Pesanan: <b class="fs-5">${orderId}</b><br><small>(Silakan pantau status di tab Riwayat)</small>`;
+    alertBox.innerHTML = `🎉 Yeay! Pesanan terkirim.<br>ID Pesanan: <b class="fs-5">${idPesanan}</b><br><small>(Silakan pantau status di tab Riwayat)</small>`;
     alertBox.classList.remove('d-none');
     
     document.getElementById('catatan').value = '';
@@ -372,7 +384,7 @@ async function kirimOrder() {
 }
 
 // ==========================================
-// RIWAYAT & UPDATE STATUS
+// RIWAYAT PESANAN (Sesuai getRiwayatToko() Code.gs)
 // ==========================================
 function setFilterHistory(status, btnElement) {
   filterStatusAktif = status;
@@ -401,7 +413,7 @@ async function refreshHistori() {
     const { data, error } = await supabaseClient
       .from('orders')
       .select('*')
-      .eq('store_name', namaTokoAktif)
+      .eq('nama_toko', namaTokoAktif)
       .order('created_at', { ascending: false });
     
     if (error) throw error;
@@ -409,9 +421,9 @@ async function refreshHistori() {
     if (data) {
       const mapped = data.map(o => ({
         idPesanan: o.id,
-        tanggal: new Date(o.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        tanggal: o.tanggal,
         status: o.status,
-        catatan: o.notes,
+        catatan: o.catatan,
         totalQty: o.total_qty,
         items: o.items
       }));
@@ -561,6 +573,9 @@ function bukaModalDetail(idPesanan) {
   modalDetail.show();
 }
 
+// ==========================================
+// KONFIRMASI KODE UNIK (Sesuai updateStatusSelesai() Code.gs)
+// ==========================================
 let pesananDikonfirmasi = "";
 
 function bukaModalKonfirmasi(idPesanan) {
@@ -588,37 +603,54 @@ async function prosesKonfirmasiUnik() {
   alertBox.classList.add('d-none');
 
   try {
-    const { data, error } = await supabaseClient
+    // Cari pesanan dan pastikan kode_unik cocok
+    const { data: orderData, error: fetchErr } = await supabaseClient
+      .from('orders')
+      .select('kode_unik')
+      .eq('id', pesananDikonfirmasi)
+      .eq('nama_toko', namaTokoAktif)
+      .maybeSingle();
+
+    if (fetchErr || !orderData) {
+      throw new Error("Pesanan tidak ditemukan di database.");
+    }
+
+    if (String(orderData.kode_unik || '').trim() !== kode) {
+      alertBox.className = 'alert alert-danger mt-3 small fw-bold py-2';
+      alertBox.innerText = 'Kode unik tidak cocok! Silakan cek kembali kode dari surat jalan.';
+      alertBox.classList.remove('d-none');
+      btn.disabled = false;
+      btn.innerHTML = 'Konfirmasi Diterima';
+      return;
+    }
+
+    // Update status pesanan ke Selesai
+    const { error: updateErr } = await supabaseClient
       .from('orders')
       .update({ status: 'Selesai' })
-      .eq('id', pesananDikonfirmasi)
-      .eq('unique_code', kode)
-      .select();
+      .eq('id', pesananDikonfirmasi);
 
     btn.disabled = false;
     btn.innerHTML = 'Konfirmasi Diterima';
 
-    if (!error && data && data.length > 0) {
-      const modalEl = document.getElementById('modalKodeUnik');
-      const modalInstance = bootstrap.Modal.getInstance(modalEl);
-      modalInstance.hide();
-      
-      const alertRiwayat = document.getElementById('alertBoxRiwayat');
-      alertRiwayat.className = 'alert alert-success mb-3 shadow-sm fade-in';
-      alertRiwayat.innerHTML = `<i class="bi bi-check-circle-fill"></i> Pesanan ${pesananDikonfirmasi} berhasil diselesaikan.`;
-      alertRiwayat.classList.remove('d-none');
-      
-      refreshHistori();
-    } else {
-      alertBox.className = 'alert alert-danger mt-3 small fw-bold py-2';
-      alertBox.innerText = 'Kode unik tidak cocok atau pesanan tidak ditemukan!';
-      alertBox.classList.remove('d-none');
-    }
-  } catch(e) {
+    if (updateErr) throw updateErr;
+
+    const modalEl = document.getElementById('modalKodeUnik');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance.hide();
+    
+    const alertRiwayat = document.getElementById('alertBoxRiwayat');
+    alertRiwayat.className = 'alert alert-success mb-3 shadow-sm fade-in';
+    alertRiwayat.innerHTML = `<i class="bi bi-check-circle-fill"></i> Pesanan ${pesananDikonfirmasi} berhasil diselesaikan.`;
+    alertRiwayat.classList.remove('d-none');
+    
+    refreshHistori();
+
+  } catch (e) {
     btn.disabled = false;
     btn.innerHTML = 'Konfirmasi Diterima';
     alertBox.className = 'alert alert-danger mt-3 small fw-bold py-2';
-    alertBox.innerText = 'Koneksi gagal. Coba lagi.';
+    alertBox.innerText = e.message || 'Koneksi gagal. Coba lagi.';
     alertBox.classList.remove('d-none');
   }
 }
