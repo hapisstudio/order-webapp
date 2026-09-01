@@ -420,9 +420,11 @@
       document.getElementById('inputBarang').placeholder = "Mengambil data barang... ⏳";
       
       try {
+        // Menggunakan limit besar agar seluruh data barang termuat penuh
         const { data, error } = await db
           .from('barang')
-          .select('itemid, itemname, packaging, unitid, goodqty, keysearch');
+          .select('itemid, itemname, packaging, unitid, goodqty, keysearch')
+          .limit(50000);
         
         if (!error && data) {
           siapkanData(data);
@@ -488,11 +490,15 @@
 
       ketikTimer = setTimeout(function() {
         const hasilPencarian = daftarBarangGlobal.filter(item => {
-          const cocok = String(item.itemname || '').toLowerCase().includes(keyword) || 
-                        String(item.itemid || '').toLowerCase().includes(keyword) ||
-                        String(item.keysearch || '').toLowerCase().includes(keyword);
+          const idStr = String(item.itemid || '').toLowerCase().trim();
+          const nameStr = String(item.itemname || '').toLowerCase().trim();
+          const searchStr = String(item.keysearch || '').toLowerCase().trim();
+          
+          const cocok = nameStr.includes(keyword) || idStr.includes(keyword) || searchStr.includes(keyword);
           if (!cocok) return false;
-          if (!showEmpty && Number(item.goodqty) <= 0) return false;
+
+          const stokTersedia = parseFloat(item.goodqty) || 0;
+          if (!showEmpty && stokTersedia <= 0) return false;
           return true;
         });
 
@@ -503,20 +509,20 @@
           const fragment = document.createDocumentFragment();
           hasilPencarian.slice(0, 50).forEach(item => {
             const div = document.createElement('div');
-            const stokTersedia = Number(item.goodqty);
+            const stokTersedia = parseFloat(item.goodqty) || 0;
             let badgeClass = stokTersedia > 0 ? 'bg-success text-white' : 'bg-danger text-white';
             let stokText = stokTersedia > 0 ? `Sisa: ${stokTersedia} ${item.unitid || ''}` : 'Habis 😭';
             if(stokTersedia <= 0) { div.style.opacity = '0.5'; }
             
             div.className = 'custom-dropdown-item';
             div.innerHTML = `<div>
-                              <div class="item-name">${item.itemname.toUpperCase()}</div>
+                              <div class="item-name">${String(item.itemname || '').toUpperCase()}</div>
                               <div class="item-id">${item.itemid} ${item.packaging ? '• ' + item.packaging : ''}</div>
                              </div>
                              <div><span class="badge ${badgeClass}">${stokText}</span></div>`;
             div.addEventListener('click', function() {
               if(stokTersedia <= 0) { alert('Waduh, barang kosong! 😭'); inputBarang.focus(); return; }
-              inputBarang.value = `${item.itemid} - ${item.itemname.toUpperCase()}`; 
+              inputBarang.value = `${item.itemid} - ${String(item.itemname || '').toUpperCase()}`; 
               dropdownBarang.style.display = 'none'; 
               document.getElementById('inputJumlah').focus(); 
             });
@@ -538,20 +544,21 @@
 
       const parts = valBarang.split(" - ");
       const selectedItemId = parts[0].trim();
-      const dataAsli = daftarBarangGlobal.find(item => item.itemid === selectedItemId);
+      const dataAsli = daftarBarangGlobal.find(item => String(item.itemid).trim() === selectedItemId);
 
       if (!dataAsli) { alert("Barang gak valid! 🔍"); return; }
-      if (Number(dataAsli.goodqty) <= 0) { alert("Stok barang kosong! 😭"); return; }
+      const stokTersedia = parseFloat(dataAsli.goodqty) || 0;
+      if (stokTersedia <= 0) { alert("Stok barang kosong! 😭"); return; }
 
       const idx = keranjang.findIndex(item => item.itemid === selectedItemId);
       let totalDiminta = inputJumlah;
       if (idx !== -1) { totalDiminta += keranjang[idx].jumlah; }
-      if (totalDiminta > Number(dataAsli.goodqty)) { alert(`Stok gak cukup! Sisa cuma ${dataAsli.goodqty}. 😅`); return; }
+      if (totalDiminta > stokTersedia) { alert(`Stok gak cukup! Sisa cuma ${stokTersedia}. 😅`); return; }
 
       if (idx !== -1) { 
         keranjang[idx].jumlah += inputJumlah; 
       } else { 
-        keranjang.push({ itemid: dataAsli.itemid, itemname: dataAsli.itemname.toUpperCase(), jumlah: inputJumlah }); 
+        keranjang.push({ itemid: dataAsli.itemid, itemname: String(dataAsli.itemname || '').toUpperCase(), jumlah: inputJumlah }); 
       }
       
       inputBarang.value = ''; document.getElementById('inputJumlah').value = '1'; inputBarang.focus();
