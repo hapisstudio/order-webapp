@@ -277,6 +277,30 @@
     </div>
   </div>
 
+  <!-- Bootstrap 5 JS Bundle (Wajib untuk komponen Modal) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Modal Konfirmasi Kode Unik -->
+  <div class="modal fade" id="modalKodeUnik" tabindex="-1" aria-labelledby="modalKodeUnikLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 20px; border: none; background: var(--card-bg);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold txt-theme" id="modalKodeUnikLabel"><i class="bi bi-shield-lock"></i> Verifikasi Penerimaan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="txt-sub small mb-3">Pesanan sedang <b>Dikirim</b>. Masukkan Kode Unik dari pihak pengirim (yang terdata di kolom ke-9 / Kolom I) untuk menyelesaikan pesanan.</p>
+          <input type="text" class="form-control" id="inputKodeKonfirmasi" placeholder="Ketik kode unik disini..." autocomplete="off">
+          <div id="alertModalKonfirmasi" class="alert d-none mt-3 small fw-bold py-2"></div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-secondary rounded-pill fw-bold" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-cute px-4" id="btnSubmitKonfirmasi" onclick="prosesKonfirmasiUnik()">Konfirmasi Diterima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==========================================
     // API URL GOOGLE APPS SCRIPT
@@ -476,11 +500,13 @@
             if(item.stok <= 0) { div.style.opacity = '0.5'; }
             
             div.className = 'custom-dropdown-item';
-            div.innerHTML = `<div><div class="item-name">${item.nama}</div><div class="item-id">${item.id}</div></div>
+            // Menambahkan .toUpperCase() agar nama barang tampil dalam huruf kapital (Uppercase)
+            div.innerHTML = `<div><div class="item-name">${item.nama.toUpperCase()}</div><div class="item-id">${item.id}</div></div>
                              <div><span class="badge ${badgeClass}">${stokText}</span></div>`;
             div.addEventListener('click', function() {
               if(item.stok <= 0) { alert('Waduh, barang kosong! 😭'); inputBarang.focus(); return; }
-              inputBarang.value = `${item.id} - ${item.nama}`; dropdownBarang.style.display = 'none'; document.getElementById('inputJumlah').focus(); 
+              // Menambahkan .toUpperCase() saat dimasukkan ke kolom input dan keranjang
+              inputBarang.value = `${item.id} - ${item.nama.toUpperCase()}`; dropdownBarang.style.display = 'none'; document.getElementById('inputJumlah').focus(); 
             });
             fragment.appendChild(div);
           });
@@ -666,11 +692,10 @@
         div.style.border = '1px solid var(--input-border)';
         
         let buttonSelesai = '';
-        // Memunculkan tombol konfirmasi jika status belum selesai dan belum dibatalkan
-        if (!sts.includes('selesai') && !sts.includes('batal')) {
+        if (sts.includes('kirim')) {
              buttonSelesai = `
-             <button id="btnSelesai_${item.idPesanan}" class="btn btn-outline-success w-100 mt-3 fw-bold" onclick="tandaiSelesai('${item.idPesanan}')" style="border-radius: 12px; border-width: 2px;">
-                 <i class="bi bi-check2-circle"></i> Konfirmasi Pesanan Selesai / Diterima
+             <button id="btnSelesai_${item.idPesanan}" class="btn btn-outline-success w-100 mt-3 fw-bold" onclick="bukaModalKonfirmasi('${item.idPesanan}')" style="border-radius: 12px; border-width: 2px;">
+                 <i class="bi bi-check2-circle"></i> Konfirmasi Pesanan Diterima
              </button>`;
         }
 
@@ -690,42 +715,81 @@
       });
     }
 
-    async function tandaiSelesai(idPesanan) {
-        if(!confirm(`Yakin pesanan ${idPesanan} sudah Anda terima dengan lengkap?`)) return;
+    let pesananDikonfirmasi = "";
 
-        const btn = document.getElementById('btnSelesai_' + idPesanan);
-        if(btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...'; }
+    function bukaModalKonfirmasi(idPesanan) {
+        pesananDikonfirmasi = idPesanan;
+        document.getElementById('inputKodeKonfirmasi').value = '';
+        document.getElementById('alertModalKonfirmasi').classList.add('d-none');
+        const modalKonfirmasi = new bootstrap.Modal(document.getElementById('modalKodeUnik'));
+        modalKonfirmasi.show();
+    }
+
+    async function prosesKonfirmasiUnik() {
+        const kode = document.getElementById('inputKodeKonfirmasi').value.trim();
+        const alertBox = document.getElementById('alertModalKonfirmasi');
+        const btn = document.getElementById('btnSubmitKonfirmasi');
+
+        if (!kode) {
+            alertBox.className = 'alert alert-danger mt-3 small fw-bold py-2';
+            alertBox.innerText = 'Kode unik wajib diisi!';
+            alertBox.classList.remove('d-none');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Cek Kode...';
+        alertBox.classList.add('d-none');
 
         try {
             let response = await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'updateStatus',
-                    idPesanan: idPesanan,
-                    namaToko: namaTokoAktif
+                    idPesanan: pesananDikonfirmasi,
+                    namaToko: namaTokoAktif,
+                    kodeUnik: kode
                 }),
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             });
             let res = await response.json();
             
+            btn.disabled = false;
+            btn.innerHTML = 'Konfirmasi Diterima';
+
             if(res.success) {
+                // Tutup kotak dialog
+                const modalEl = document.getElementById('modalKodeUnik');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                modalInstance.hide();
+                
                 // Update Storage Lokal
                 const keyStorage = 'riwayatOrder_' + namaTokoAktif;
                 let history = JSON.parse(localStorage.getItem(keyStorage)) || [];
-                let idx = history.findIndex(o => o.idPesanan === idPesanan);
+                let idx = history.findIndex(o => o.idPesanan === pesananDikonfirmasi);
                 if(idx !== -1) {
                     history[idx].status = 'Selesai';
                     localStorage.setItem(keyStorage, JSON.stringify(history));
                 }
-                // Refresh View
+                
+                // Tampilkan notifikasi di Halaman Riwayat
+                const alertRiwayat = document.getElementById('alertBoxRiwayat');
+                alertRiwayat.className = 'alert alert-success mb-3 shadow-sm fade-in';
+                alertRiwayat.innerHTML = `<i class="bi bi-check-circle-fill"></i> Pesanan ${pesananDikonfirmasi} berhasil diselesaikan.`;
+                alertRiwayat.classList.remove('d-none');
+                
                 renderHistori();
             } else {
-                alert("Gagal merubah status: " + res.message);
-                if(btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check2-circle"></i> Konfirmasi Pesanan Selesai / Diterima'; }
+                alertBox.className = 'alert alert-danger mt-3 small fw-bold py-2';
+                alertBox.innerText = res.message;
+                alertBox.classList.remove('d-none');
             }
         } catch(e) {
-            alert("Koneksi gagal. Pastikan perangkat memiliki internet.");
-            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check2-circle"></i> Konfirmasi Pesanan Selesai / Diterima'; }
+            btn.disabled = false;
+            btn.innerHTML = 'Konfirmasi Diterima';
+            alertBox.className = 'alert alert-danger mt-3 small fw-bold py-2';
+            alertBox.innerText = 'Koneksi gagal. Pastikan perangkat memiliki internet.';
+            alertBox.classList.remove('d-none');
         }
     }
   </script>
