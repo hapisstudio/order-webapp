@@ -518,13 +518,13 @@
             if(item.stok <= 0) { div.style.opacity = '0.5'; }
             
             div.className = 'custom-dropdown-item';
-            // Menambahkan .toUpperCase() agar nama barang tampil dalam huruf kapital (Uppercase)
-            div.innerHTML = `<div><div class="item-name">${item.nama.toUpperCase()}</div><div class="item-id">${item.id}</div></div>
+            // Menambahkan String() agar tidak error jika format data berupa angka/kosong
+            div.innerHTML = `<div><div class="item-name">${String(item.nama || '').toUpperCase()}</div><div class="item-id">${item.id}</div></div>
                              <div><span class="badge ${badgeClass}">${stokText}</span></div>`;
             div.addEventListener('click', function() {
               if(item.stok <= 0) { alert('Waduh, barang kosong! 😭'); inputBarang.focus(); return; }
-              // Menambahkan .toUpperCase() saat dimasukkan ke kolom input dan keranjang
-              inputBarang.value = `${item.id} - ${item.nama.toUpperCase()}`; dropdownBarang.style.display = 'none'; document.getElementById('inputJumlah').focus(); 
+              // Menambahkan String().toUpperCase() saat dimasukkan ke kolom input dan keranjang
+              inputBarang.value = `${item.id} - ${String(item.nama || '').toUpperCase()}`; dropdownBarang.style.display = 'none'; document.getElementById('inputJumlah').focus(); 
             });
             fragment.appendChild(div);
           });
@@ -541,7 +541,10 @@
       const inputJumlah = parseInt(document.getElementById('inputJumlah').value);
       if (!valBarang) { alert("Pilih barangnya dulu ya! 🥺"); return; }
       if (!inputJumlah || inputJumlah <= 0) { alert("Jumlah tidak valid! ✌️"); return; }
-      const dataAsli = daftarBarangGlobal.find(item => `${item.id} - ${item.nama}` === valBarang);
+      
+      // Sesuaikan validasi dengan nama yang sudah di-Uppercase
+      const dataAsli = daftarBarangGlobal.find(item => `${item.id} - ${String(item.nama || '').toUpperCase()}` === valBarang || `${item.id} - ${item.nama}` === valBarang);
+      
       if (!dataAsli) { alert("Barang gak valid! 🔍"); return; }
       if (dataAsli.stok <= 0) { alert("Stok barang kosong! 😭"); return; }
 
