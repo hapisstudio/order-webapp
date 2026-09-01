@@ -301,6 +301,24 @@
     </div>
   </div>
 
+  <!-- Modal Detail Pesanan -->
+  <div class="modal fade" id="modalDetailPesanan" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="border-radius: 20px; border: none; background: var(--card-bg);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold txt-theme" id="modalDetailLabel"><i class="bi bi-receipt"></i> Detail Pesanan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="bodyDetailPesanan">
+          <!-- Konten diisi secara dinamis via JavaScript -->
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-cute px-4 rounded-pill fw-bold" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==========================================
     // API URL GOOGLE APPS SCRIPT
@@ -691,11 +709,16 @@
         div.className = 'section-box mb-3 p-3 shadow-sm bg-white fade-in';
         div.style.border = '1px solid var(--input-border)';
         
-        let buttonSelesai = '';
+        let actionButtons = `
+             <button class="btn btn-outline-primary flex-fill fw-bold" onclick="bukaModalDetail('${item.idPesanan}')" style="border-radius: 12px; border-width: 2px;">
+                 <i class="bi bi-receipt"></i> Detail
+             </button>
+        `;
+
         if (sts.includes('kirim')) {
-             buttonSelesai = `
-             <button id="btnSelesai_${item.idPesanan}" class="btn btn-outline-success w-100 mt-3 fw-bold" onclick="bukaModalKonfirmasi('${item.idPesanan}')" style="border-radius: 12px; border-width: 2px;">
-                 <i class="bi bi-check2-circle"></i> Konfirmasi Pesanan Diterima
+             actionButtons += `
+             <button id="btnSelesai_${item.idPesanan}" class="btn btn-outline-success flex-fill fw-bold" onclick="bukaModalKonfirmasi('${item.idPesanan}')" style="border-radius: 12px; border-width: 2px;">
+                 <i class="bi bi-check2-circle"></i> Terima Pesanan
              </button>`;
         }
 
@@ -709,10 +732,72 @@
           </div>
           <div class="small txt-main mt-1 fw-bold"><i class="bi bi-boxes"></i> Total Item: ${item.totalQty} qty</div>
           <div class="small txt-main">${itemListHtml}</div>
-          ${buttonSelesai}
+          <div class="d-flex gap-2 mt-3">
+             ${actionButtons}
+          </div>
         `;
         container.appendChild(div);
       });
+    }
+
+    // Fungsi untuk membuka dan memuat data Detail Pesanan
+    function bukaModalDetail(idPesanan) {
+        const keyStorage = 'riwayatOrder_' + namaTokoAktif;
+        let history = JSON.parse(localStorage.getItem(keyStorage)) || [];
+        const item = history.find(o => o.idPesanan === idPesanan);
+        
+        if (!item) return;
+
+        let tbodyHtml = '';
+        item.items.forEach((brg, idx) => {
+            tbodyHtml += `
+                <tr>
+                    <td class="text-center txt-sub">${idx + 1}</td>
+                    <td class="txt-main fw-bold"><div class="small txt-sub fw-normal">${brg.idBarang}</div>${brg.namaBarang}</td>
+                    <td class="text-center fs-5 txt-theme">${brg.jumlah}</td>
+                </tr>
+            `;
+        });
+
+        const sts = item.status ? item.status.toLowerCase() : 'pending';
+        let badgeColor = 'secondary', badgeIcon = 'bi-circle';
+        if (sts.includes('pending')) { badgeColor = 'warning text-dark'; badgeIcon = 'bi-hourglass-split'; }
+        else if (sts.includes('proses')) { badgeColor = 'info text-dark'; badgeIcon = 'bi-box-seam'; }
+        else if (sts.includes('kirim')) { badgeColor = 'primary text-white'; badgeIcon = 'bi-truck'; }
+        else if (sts.includes('selesai')) { badgeColor = 'success text-white'; badgeIcon = 'bi-check-circle-fill'; }
+        else if (sts.includes('batal')) { badgeColor = 'danger text-white'; badgeIcon = 'bi-x-circle-fill'; }
+
+        document.getElementById('bodyDetailPesanan').innerHTML = `
+            <div class="mb-3">
+                <div class="fw-bold fs-5 txt-theme">${item.idPesanan}</div>
+                <div class="small txt-sub"><i class="bi bi-calendar-event"></i> ${item.tanggal}</div>
+                <span class="badge bg-${badgeColor} mt-2 fs-6"><i class="bi ${badgeIcon}"></i> ${item.status || 'Pending'}</span>
+            </div>
+            
+            <div class="section-box p-3 mb-4" style="border: 1px solid var(--input-border); background: var(--input-bg); padding: 15px !important;">
+                <label class="form-label fw-bold txt-main small mb-1">📝 Catatan Order</label>
+                <div class="txt-sub small fw-semibold">${item.catatan && item.catatan !== '-' ? item.catatan : 'Tidak ada catatan tambahan.'}</div>
+            </div>
+
+            <h6 class="fw-bold mb-2 txt-main"><i class="bi bi-cart"></i> Rincian Barang:</h6>
+            <div class="table-responsive">
+              <table class="table-cart w-100 mb-0">
+                <thead>
+                  <tr>
+                    <th width="40" class="text-center">No</th>
+                    <th>Nama Barang</th>
+                    <th width="80" class="text-center">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    ${tbodyHtml}
+                </tbody>
+              </table>
+            </div>
+        `;
+
+        const modalDetail = new bootstrap.Modal(document.getElementById('modalDetailPesanan'));
+        modalDetail.show();
     }
 
     let pesananDikonfirmasi = "";
