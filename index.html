@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gudang Express - Sistem Order Cepat</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <!-- Google Font: Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="text-center">
+      <div class="theme-switcher-container">
+        <span class="small fw-bold txt-sub me-1">Tema:</span>
+        <button class="theme-btn" data-theme-val="default" style="background: #8b5cf6;"></button>
+        <button class="theme-btn" data-theme-val="matcha" style="background: #22c55e;"></button>
+        <button class="theme-btn" data-theme-val="strawberry" style="background: #ec4899;"></button>
+        <button class="theme-btn" data-theme-val="ocean" style="background: #06b6d4;"></button>
+        <div style="width: 2px; height: 24px; background: var(--text-sub); margin: 0 8px; opacity: 0.3; border-radius: 2px;"></div>
+        <button class="mode-toggle" id="darkModeToggle"><i class="bi bi-moon-stars-fill" id="modeIcon"></i></button>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        
+        <!-- ==============================================
+             HALAMAN LOGIN
+             ============================================== -->
+        <div class="card card-order fade-in" id="pageLogin">
+          <h2 class="text-center mb-1 txt-theme">🔐 Login Toko</h2>
+          <p class="text-center txt-sub mb-4 fw-semibold">Silakan masuk untuk akses gudang</p>
+          
+          <div id="alertBoxLogin" class="alert d-none fw-bold shadow-sm" style="border-radius: 16px;"></div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold txt-main">Username</label>
+            <input type="text" class="form-control" id="loginUsername" placeholder="Ketik username Anda...">
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-bold txt-main">Password</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Ketik password Anda...">
+          </div>
+          
+          <button type="button" class="btn btn-cute w-100" id="btnLogin" onclick="prosesLogin()">
+            Masuk <i class="bi bi-box-arrow-in-right"></i>
+          </button>
+        </div>
+
+        <!-- ==============================================
+             HALAMAN UTAMA (Aplikasi Order & Riwayat)
+             ============================================== -->
+        <div class="card card-order d-none" id="pageMainApp">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0 txt-theme">📦 Gudang Express</h2>
+            <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold" onclick="logout()">
+              <i class="bi bi-power"></i> Keluar
+            </button>
+          </div>
+          <p class="txt-sub mb-4 fw-semibold">Pesan barang atau cek konfirmasi riwayat dengan mudah!</p>
+          
+          <!-- TAB NAVIGASI -->
+          <div class="nav-tabs-custom">
+            <div class="nav-tab-btn active" id="tabOrder" onclick="switchTab('order')">
+              <i class="bi bi-cart-plus"></i> Pesan Barang
+            </div>
+            <div class="nav-tab-btn" id="tabHistory" onclick="switchTab('history')">
+              <i class="bi bi-clock-history"></i> Riwayat & Status
+            </div>
+          </div>
+
+          <!-- KONTEN 1: FORM ORDER -->
+          <div id="pageOrder" class="fade-in">
+            <div id="alertBoxOrder" class="alert d-none fw-bold shadow-sm" style="border-radius: 16px;"></div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold txt-main">🏠 Identitas Toko (Otomatis)</label>
+              <input type="text" class="form-control fw-bold text-primary" id="namaToko" readonly>
+            </div>
+
+            <div class="section-box mb-4">
+              <h6 class="fw-bold mb-3 txt-theme">🛍️ Cari & Pilih Barang</h6>
+              <div class="row g-3">
+                <div class="col-md-8 search-wrapper">
+                  <div class="input-group">
+                    <span class="input-group-text border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" id="inputBarang" placeholder="Tunggu sebentar ya... ⏳" autocomplete="off">
+                  </div>
+                  <!-- Switch Filter Stok -->
+                  <div class="form-check form-switch mt-2 ps-5 ms-1">
+                    <input class="form-check-input" type="checkbox" id="switchStok" onchange="triggerPencarian()">
+                    <label class="form-check-label small txt-sub fw-bold mt-1 ms-1" for="switchStok">Tampilkan barang yang stoknya habis</label>
+                  </div>
+                  <div id="dropdownBarang" class="custom-dropdown"></div>
+                </div>
+                
+                <div class="col-md-4 d-flex align-items-start">
+                  <input type="number" class="form-control me-2 text-center" id="inputJumlah" placeholder="Qty" min="1" value="1" style="max-width: 80px;">
+                  <button type="button" class="btn btn-tambah w-100" onclick="tambahKeKeranjang()" style="height: 52px;">
+                    <i class="bi bi-plus-lg"></i> Tambah
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <h6 class="fw-bold mb-2 txt-main">🛒 Keranjang Belanja</h6>
+            <div class="table-responsive mb-4" style="overflow-x: visible;">
+              <table class="table-cart w-100 mb-0">
+                <thead>
+                  <tr>
+                    <th width="40" class="text-center">No</th>
+                    <th>Nama Barang</th>
+                    <th width="80" class="text-center">Qty</th>
+                    <th width="60" class="text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="bodyKeranjang">
+                  <tr><td colspan="4" class="text-center py-4 txt-sub">Keranjangmu masih kosong nih, ayo diisi! 🥺</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mb-4">
+              <label for="catatan" class="form-label fw-bold txt-main">📝 Catatan (Opsional)</label>
+              <textarea class="form-control" id="catatan" rows="2" placeholder="Tulis catatan khusus disini..."></textarea>
+            </div>
+
+            <button type="button" id="btnSubmitOrder" class="btn btn-cute w-100" onclick="kirimOrder()">
+              Kirim Pesanan Sekarang 🚀
+            </button>
+          </div>
+
+          <!-- KONTEN 2: HISTORI PESANAN -->
+          <div id="pageHistory" class="d-none fade-in">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0 txt-theme"><i class="bi bi-clock-history"></i> Riwayat & Status Pesanan</h6>
+              <button id="btnRefreshHistori" class="btn btn-sm btn-outline-primary rounded-pill fw-bold" onclick="refreshHistori()">
+                <i class="bi bi-arrow-clockwise" id="iconRefresh"></i> Perbarui
+              </button>
+            </div>
+            
+            <p class="small txt-sub mb-3">Klik perbarui untuk mensinkronkan status pesanan dari Gudang.</p>
+            
+            <!-- Tab Filter Status -->
+            <div class="filter-scroll-container" id="filterRiwayat">
+              <button class="btn filter-btn btn-dark active text-white" onclick="setFilterHistory('Semua', this)">Semua</button>
+              <button class="btn filter-btn btn-outline-secondary" onclick="setFilterHistory('Pending', this)">Pending</button>
+              <button class="btn filter-btn btn-outline-secondary" onclick="setFilterHistory('Diproses', this)">Diproses</button>
+              <button class="btn filter-btn btn-outline-secondary" onclick="setFilterHistory('Dikirim', this)">Dikirim</button>
+              <button class="btn filter-btn btn-outline-secondary" onclick="setFilterHistory('Selesai', this)">Selesai</button>
+              <button class="btn filter-btn btn-outline-secondary" onclick="setFilterHistory('Dibatalkan', this)">Batal</button>
+            </div>
+            
+            <div id="alertBoxRiwayat" class="alert d-none fw-bold shadow-sm" style="border-radius: 16px;"></div>
+
+            <div id="listHistori">
+              <!-- Item history di-render disini via JS -->
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Kode Unik -->
+  <div class="modal fade" id="modalKodeUnik" tabindex="-1" aria-labelledby="modalKodeUnikLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 20px; border: none; background: var(--card-bg);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold txt-theme" id="modalKodeUnikLabel"><i class="bi bi-shield-lock"></i> Verifikasi Penerimaan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="txt-sub small mb-3">Pesanan sedang <b>Dikirim</b>. Masukkan 6 angka terakhir dari No. Mutasi pada surat jalan untuk menyelesaikan pesanan.</p>
+          <input type="text" class="form-control" id="inputKodeKonfirmasi" placeholder="Ketik kode unik disini..." autocomplete="off">
+          <div id="alertModalKonfirmasi" class="alert d-none mt-3 small fw-bold py-2"></div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-secondary rounded-pill fw-bold" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-cute px-4" id="btnSubmitKonfirmasi" onclick="prosesKonfirmasiUnik()">Konfirmasi Diterima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detail Pesanan -->
+  <div class="modal fade" id="modalDetailPesanan" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="border-radius: 20px; border: none; background: var(--card-bg);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold txt-theme" id="modalDetailLabel"><i class="bi bi-receipt"></i> Detail Pesanan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="bodyDetailPesanan">
+          <!-- Konten diisi secara dinamis via JavaScript -->
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-cute px-4 rounded-pill fw-bold" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="script.js"></script>
+</body>
+</html>
