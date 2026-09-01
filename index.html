@@ -33,9 +33,7 @@
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8">
         
-        <!-- ==============================================
-             HALAMAN LOGIN
-             ============================================== -->
+        <!-- HALAMAN LOGIN -->
         <div class="card card-order fade-in" id="pageLogin">
           <h2 class="text-center mb-1 txt-theme">🔐 Login Toko</h2>
           <p class="text-center txt-sub mb-4 fw-semibold">Silakan masuk untuk akses gudang</p>
@@ -56,9 +54,7 @@
           </button>
         </div>
 
-        <!-- ==============================================
-             HALAMAN UTAMA (Aplikasi Order & Riwayat)
-             ============================================== -->
+        <!-- HALAMAN UTAMA -->
         <div class="card card-order d-none" id="pageMainApp">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-0 txt-theme">📦 Gudang Express</h2>
@@ -95,7 +91,6 @@
                     <span class="input-group-text border-end-0"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control border-start-0 ps-0" id="inputBarang" placeholder="Tunggu sebentar ya... ⏳" autocomplete="off">
                   </div>
-                  <!-- Switch Filter Stok -->
                   <div class="form-check form-switch mt-2 ps-5 ms-1">
                     <input class="form-check-input" type="checkbox" id="switchStok" onchange="triggerPencarian()">
                     <label class="form-check-label small txt-sub fw-bold mt-1 ms-1" for="switchStok">Tampilkan barang yang stoknya habis</label>
@@ -150,7 +145,6 @@
             
             <p class="small txt-sub mb-3">Klik perbarui untuk mensinkronkan status pesanan dari Gudang.</p>
             
-            <!-- Tab Filter Status -->
             <div class="filter-scroll-container" id="filterRiwayat">
               <button class="btn filter-btn btn-dark active text-white" onclick="setFilterHistory('Semua', this)">Semua</button>
               <button class="btn filter-btn btn-outline-secondary" onclick="setFilterHistory('Pending', this)">Pending</button>
@@ -162,9 +156,7 @@
             
             <div id="alertBoxRiwayat" class="alert d-none fw-bold shadow-sm" style="border-radius: 16px;"></div>
 
-            <div id="listHistori">
-              <!-- Item history di-render disini via JS -->
-            </div>
+            <div id="listHistori"></div>
           </div>
           
         </div>
@@ -201,9 +193,7 @@
           <h5 class="modal-title fw-bold txt-theme" id="modalDetailLabel"><i class="bi bi-receipt"></i> Detail Pesanan</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="bodyDetailPesanan">
-          <!-- Konten diisi secara dinamis via JavaScript -->
-        </div>
+        <div class="modal-body" id="bodyDetailPesanan"></div>
         <div class="modal-footer border-0 pt-0">
           <button type="button" class="btn btn-cute px-4 rounded-pill fw-bold" data-bs-dismiss="modal">Tutup</button>
         </div>
@@ -213,6 +203,8 @@
 
   <!-- Bootstrap 5 JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Supabase JS Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Custom JS -->
   <script src="script.js"></script>
 </body>
