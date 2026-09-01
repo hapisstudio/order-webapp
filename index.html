@@ -190,7 +190,7 @@
                     <span class="input-group-text border-end-0"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control border-start-0 ps-0" id="inputBarang" placeholder="Tunggu sebentar ya... ⏳" autocomplete="off">
                   </div>
-                  <!-- Switch Filter Stok -->
+                  <!-- Switch Filter Stok (goodqty) -->
                   <div class="form-check form-switch mt-2 ps-5 ms-1">
                     <input class="form-check-input" type="checkbox" id="switchStok" onchange="triggerPencarian()">
                     <label class="form-check-label small txt-sub fw-bold mt-1 ms-1" for="switchStok">Tampilkan barang yang stoknya habis</label>
@@ -459,7 +459,7 @@
     }
 
     // ==========================================
-    // LOGIKA FORM ORDER & PENCARIAN STOK
+    // LOGIKA FORM ORDER & PENCARIAN STOK (goodqty)
     // ==========================================
     function siapkanData(data) {
       daftarBarangGlobal = data;
@@ -537,13 +537,13 @@
       if (!inputJumlah || inputJumlah <= 0) { alert("Jumlah tidak valid! ✌️"); return; }
 
       const parts = valBarang.split(" - ");
-      const itemId = parts[0].trim();
-      const dataAsli = daftarBarangGlobal.find(item => item.itemid === itemId);
+      const selectedItemId = parts[0].trim();
+      const dataAsli = daftarBarangGlobal.find(item => item.itemid === selectedItemId);
 
       if (!dataAsli) { alert("Barang gak valid! 🔍"); return; }
       if (Number(dataAsli.goodqty) <= 0) { alert("Stok barang kosong! 😭"); return; }
 
-      const idx = keranjang.findIndex(item => item.idBarang === itemId);
+      const idx = keranjang.findIndex(item => item.itemid === selectedItemId);
       let totalDiminta = inputJumlah;
       if (idx !== -1) { totalDiminta += keranjang[idx].jumlah; }
       if (totalDiminta > Number(dataAsli.goodqty)) { alert(`Stok gak cukup! Sisa cuma ${dataAsli.goodqty}. 😅`); return; }
@@ -551,7 +551,7 @@
       if (idx !== -1) { 
         keranjang[idx].jumlah += inputJumlah; 
       } else { 
-        keranjang.push({ idBarang: dataAsli.itemid, namaBarang: dataAsli.itemname.toUpperCase(), jumlah: inputJumlah }); 
+        keranjang.push({ itemid: dataAsli.itemid, itemname: dataAsli.itemname.toUpperCase(), jumlah: inputJumlah }); 
       }
       
       inputBarang.value = ''; document.getElementById('inputJumlah').value = '1'; inputBarang.focus();
@@ -565,7 +565,7 @@
       if (keranjang.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 txt-sub">Keranjangmu masih kosong nih, ayo diisi! 🥺</td></tr>'; return; }
       keranjang.forEach((item, index) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="text-center txt-sub">${index + 1}</td><td class="txt-theme">${item.idBarang} - ${item.namaBarang}</td>
+        tr.innerHTML = `<td class="text-center txt-sub">${index + 1}</td><td class="txt-theme">${item.itemid} - ${item.itemname}</td>
                         <td class="text-center fs-5 txt-main">${item.jumlah}</td><td class="text-center"><button class="btn btn-sm btn-outline-danger btn-hapus" onclick="hapusDariKeranjang(${index})"><i class="bi bi-trash3-fill"></i></button></td>`;
         tbody.appendChild(tr);
       });
@@ -601,8 +601,8 @@
 
         const itemsPayload = keranjang.map(item => ({
           id_pesanan: idPesanan,
-          id_barang: item.idBarang,
-          nama_barang: item.namaBarang,
+          id_barang: item.itemid,
+          nama_barang: item.itemname,
           jumlah: item.jumlah
         }));
 
@@ -664,7 +664,7 @@
               status: ord.status || 'Pending',
               catatan: ord.catatan || '-',
               totalQty: ord.order_items ? ord.order_items.reduce((acc, curr) => acc + curr.jumlah, 0) : 0,
-              items: ord.order_items ? ord.order_items.map(i => ({ idBarang: i.id_barang, namaBarang: i.nama_barang, jumlah: i.jumlah })) : []
+              items: ord.order_items ? ord.order_items.map(i => ({ itemid: i.id_barang, itemname: i.nama_barang, jumlah: i.jumlah })) : []
             }));
 
             const keyStorage = 'riwayatOrder_' + namaTokoAktif;
@@ -712,7 +712,7 @@
         if (item.items && item.items.length > 0) {
             const displayItems = item.items.slice(0, 2);
             itemListHtml = `<ul class="mb-0 ps-3 mt-2 text-start">`;
-            displayItems.forEach(brg => { itemListHtml += `<li>${brg.namaBarang} (x${brg.jumlah})</li>`; });
+            displayItems.forEach(brg => { itemListHtml += `<li>${brg.itemname} (x${brg.jumlah})</li>`; });
             if (item.items.length > 2) { itemListHtml += `<li class="txt-sub fst-italic">...dan ${item.items.length - 2} barang lainnya</li>`; }
             itemListHtml += `</ul>`;
         }
@@ -764,7 +764,7 @@
             tbodyHtml += `
                 <tr>
                     <td class="text-center txt-sub">${idx + 1}</td>
-                    <td class="txt-main fw-bold"><div class="small txt-sub fw-normal">${brg.idBarang}</div>${brg.namaBarang}</td>
+                    <td class="txt-main fw-bold"><div class="small txt-sub fw-normal">${brg.itemid}</div>${brg.itemname}</td>
                     <td class="text-center fs-5 txt-theme">${brg.jumlah}</td>
                 </tr>
             `;
