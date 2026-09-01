@@ -1,6 +1,3 @@
-// ==========================================
-// KONFIGURASI SUPABASE (Ganti dengan kredensial Anda)
-// ==========================================
 const SUPABASE_URL = "https://foaujmoctmcadmonfslv.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_LoCWbn2KdXSJfjykpy1Dsw_Poyk6eEe";
 
