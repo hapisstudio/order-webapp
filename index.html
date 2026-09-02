@@ -804,7 +804,7 @@
       const idx = keranjang.findIndex(item => item.namaBarang === valBarang);
       let totalDiminta = inputJumlah;
       if (idx !== -1) { totalDiminta += keranjang[idx].jumlah; }
-      if (totalDiminta > dataAsli.stok) { alert(`Stok gak cukup! Sisa cuma ${dataAsli.stok}. 😅`); return; }
+      if (totalDiminta > dataAsli.stok) { alert(`STOP rek ga cukup! sisa tinggal ${dataAsli.stok}. ojo di paksa maneh, engko malah tinggal kenangan tok😅`); return; }
 
       if (idx !== -1) { keranjang[idx].jumlah += inputJumlah; } 
       else { keranjang.push({ namaBarang: valBarang, jumlah: inputJumlah }); }
