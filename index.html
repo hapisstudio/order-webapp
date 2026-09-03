@@ -570,20 +570,34 @@
           <div class="liquid-glass rounded-3xl p-4 bg-panel/40 border border-line space-y-3.5">
             <!-- Header Status Operasional -->
             <div class="flex items-center justify-between">
-              <span class="text-xs font-mono uppercase tracking-wider text-soft flex items-center gap-1.5">
-                <i data-lucide="bell" class="w-3.5 h-3.5 text-gold"></i>
-                Papan Info Gudang
-              </span>
+              <div class="flex items-center gap-1.5 min-w-0">
+                <span class="text-xs font-mono uppercase tracking-wider text-soft flex items-center gap-1.5 shrink-0">
+                  <i data-lucide="bell" class="w-3.5 h-3.5 text-gold"></i>
+                  <span>Papan Info</span>
+                </span>
+                <span id="badgeTargetInfoToko" class="hidden text-[9px] font-mono px-2 py-0.5 rounded-full bg-pink/15 border border-pink/30 text-pink font-semibold truncate">
+                  ⭐ Khusus Toko Anda
+                </span>
+              </div>
               <div class="flex items-center gap-2">
                 <button id="btnEditInfoAdmin" onclick="bukaModalAdmin()" title="Edit Info Gudang"
                         class="hidden items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/40 text-gold hover:bg-gold/25 tap-press">
                   <i data-lucide="pencil" class="w-3 h-3"></i>
                   <span>Edit</span>
                 </button>
-                <span id="statusOperasionalBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/10 border border-leaf/30 text-leaf flex items-center gap-1">
+                <span id="statusOperasionalBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/10 border border-leaf/30 text-leaf flex items-center gap-1 shrink-0">
                   <span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span>
                   <span id="labelStatusOperasional">Operasional Normal</span>
                 </span>
+              </div>
+            </div>
+
+            <!-- Banner Pengumuman Khusus Toko (Bila Diatur Admin) -->
+            <div id="boxPengumumanKhusus" class="hidden p-3 rounded-2xl bg-pink/10 border border-pink/25 text-xs text-pink flex items-start gap-2.5">
+              <i data-lucide="megaphone" class="w-4 h-4 shrink-0 mt-0.5 text-pink"></i>
+              <div class="min-w-0 flex-1">
+                <p class="font-display font-bold text-white text-[11px]" id="labelJudulPengumuman">Pengumuman Khusus Toko</p>
+                <p class="text-[10px] font-mono text-pink/90 mt-0.5 leading-relaxed" id="labelIsiPengumuman"></p>
               </div>
             </div>
 
@@ -938,23 +952,37 @@
           <div class="flex items-center justify-between">
             <label class="text-[11px] font-mono uppercase tracking-wider text-gold flex items-center gap-1.5 font-bold">
               <i data-lucide="target" class="w-3.5 h-3.5"></i>
-              <span>Pilih Target Tampilan Toko</span>
+              <span>Pilih Toko yang Diatur</span>
             </label>
             <button type="button" id="btnHapusConfigKhusus" onclick="hapusConfigKhususToko()"
-                    class="hidden text-[10px] font-mono px-2 py-0.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 hover:bg-red-500/25 tap-press">
-              Kembalikan ke Default
+                    class="hidden text-[10px] font-mono px-2.5 py-1 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 hover:bg-red-500/25 tap-press flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+              <span>Kembalikan ke Default</span>
             </button>
           </div>
           <select id="cfgTargetToko" onchange="gantiTargetTokoAdmin(this.value)"
                   class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs font-semibold text-white outline-none focus:border-gold">
             <option value="__DEFAULT__">🌐 Default (Semua Toko)</option>
           </select>
-          <p id="targetTokoKeterangan" class="text-[10px] font-mono text-soft">
-            Mengatur informasi umum untuk semua toko yang tidak memiliki jadwal khusus.
+          <div id="targetTokoStatusBadge" class="p-2 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between text-[11px] font-mono">
+            <span class="text-soft">Status Pengaturan:</span>
+            <span id="labelTokoConfigType" class="text-gold font-bold">Default Umum</span>
+          </div>
+          <p id="targetTokoKeterangan" class="text-[10px] font-mono text-soft leading-relaxed">
+            Mengatur informasi default untuk semua toko yang tidak memiliki jadwal khusus.
           </p>
         </div>
 
         <form id="formConfigPapan" onsubmit="event.preventDefault(); simpanConfigGudangKeSpreadsheet();" class="space-y-3">
+          <!-- Judul / Pengumuman Tambahan Khusus -->
+          <div>
+            <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">
+              Pemberitahuan Khusus Toko Ini (Opsional)
+            </label>
+            <input type="text" id="cfgJudulPengumuman" placeholder="Contoh: Rute Pengiriman Wilayah Barat / Minimal 3 Dus"
+                   class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold" />
+          </div>
+
           <!-- Status Operasional -->
           <div>
             <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Status Operasional Gudang</label>
@@ -1216,7 +1244,8 @@ function jsonResponse(obj) {
       cutOffDesc: 'Order setelah jam 13.00 dikirim rute besok',
       catatanGudang: 'Pastikan mencocokkan jumlah koli & surat jalan saat kurir tiba. Konfirmasi resi membutuhkan 6 digit kode dari kurir.',
       nomorWaAdmin: NOMOR_ADMIN_GUDANG,
-      nomorTelAdmin: NOMOR_ADMIN_GUDANG
+      nomorTelAdmin: NOMOR_ADMIN_GUDANG,
+      judulPengumuman: ''
     };
 
     // Objek penyimpan seluruh config: key '__DEFAULT__' untuk umum, dan key [namaToko] untuk per-toko
@@ -1245,8 +1274,24 @@ function jsonResponse(obj) {
 
       renderPapanInfoGudang();
 
-      // 2. Ambil data konfigurasi mutakhir dari Google Spreadsheet
+      // 2. Ambil data konfigurasi & user mutakhir dari Google Spreadsheet
       await sinkronisasiConfigDariSpreadsheet();
+      // Pastikan data user juga ditarik agar target dropdown langsung lengkap
+      muatUsersDariSpreadsheetSiluman();
+    }
+
+    async function muatUsersDariSpreadsheetSiluman() {
+      try {
+        const response = await fetch(`${API_URL}?action=getUsers`, { method: 'GET' });
+        const res = await response.json();
+        if (res.success && res.data) {
+          daftarUsersGlobal = res.data;
+          localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+          populasiTargetTokoDropdown();
+        }
+      } catch (e) {
+        // Abaikan jika offline
+      }
     }
 
     async function sinkronisasiConfigDariSpreadsheet() {
@@ -1273,10 +1318,38 @@ function jsonResponse(obj) {
       }
     }
 
+    /* Pencarian Konfigurasi Toko Cerdas (Case-Insensitive & Username Matching) */
     function getConfigUntukToko(namaToko) {
-      if (namaToko && multiConfigGudang[namaToko]) {
-        return { ...multiConfigGudang['__DEFAULT__'], ...multiConfigGudang[namaToko], isCustom: true };
+      if (!namaToko) {
+        return { ...(multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG), isCustom: false };
       }
+
+      const cleanToko = String(namaToko).trim().toLowerCase();
+
+      // 1. Cocokkan langsung key nama toko
+      for (const [key, cfg] of Object.entries(multiConfigGudang)) {
+        if (key !== '__DEFAULT__' && key.trim().toLowerCase() === cleanToko) {
+          return { ...multiConfigGudang['__DEFAULT__'], ...cfg, isCustom: true, targetKey: key };
+        }
+      }
+
+      // 2. Cocokkan bila key berupa username dari akun toko tersebut
+      const foundUser = daftarUsersGlobal.find(u => 
+        (u.namaToko && u.namaToko.trim().toLowerCase() === cleanToko) ||
+        (u.username && u.username.trim().toLowerCase() === cleanToko)
+      );
+
+      if (foundUser) {
+        const altKey1 = foundUser.namaToko;
+        const altKey2 = foundUser.username;
+        if (altKey1 && multiConfigGudang[altKey1]) {
+          return { ...multiConfigGudang['__DEFAULT__'], ...multiConfigGudang[altKey1], isCustom: true, targetKey: altKey1 };
+        }
+        if (altKey2 && multiConfigGudang[altKey2]) {
+          return { ...multiConfigGudang['__DEFAULT__'], ...multiConfigGudang[altKey2], isCustom: true, targetKey: altKey2 };
+        }
+      }
+
       return { ...(multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG), isCustom: false };
     }
 
@@ -1289,12 +1362,39 @@ function jsonResponse(obj) {
       const labelCutOffJam = document.getElementById('labelCutOffJam');
       const labelCutOffDesc = document.getElementById('labelCutOffDesc');
       const labelCatatan = document.getElementById('labelCatatanGudang');
+      const badgeKhusus = document.getElementById('badgeTargetInfoToko');
+      const boxPengumuman = document.getElementById('boxPengumumanKhusus');
+      const labelJudulPengumuman = document.getElementById('labelJudulPengumuman');
+      const labelIsiPengumuman = document.getElementById('labelIsiPengumuman');
 
       if (labelJamBuka) labelJamBuka.innerText = activeCfg.jamBuka;
       if (labelHariLibur) labelHariLibur.innerText = activeCfg.hariLibur;
       if (labelCutOffJam) labelCutOffJam.innerText = activeCfg.cutOffJam;
       if (labelCutOffDesc) labelCutOffDesc.innerText = activeCfg.cutOffDesc;
       if (labelCatatan) labelCatatan.innerText = activeCfg.catatanGudang;
+
+      // Tampilkan Badge khusus jika toko ini memiliki jadwal tersendiri
+      if (badgeKhusus) {
+        if (activeCfg.isCustom && namaTokoAktif && !isAdmin) {
+          badgeKhusus.classList.remove('hidden');
+          badgeKhusus.innerText = `⭐ Khusus ${namaTokoAktif}`;
+        } else {
+          badgeKhusus.classList.add('hidden');
+        }
+      }
+
+      // Tampilkan Banner pengumuman tambahan jika admin mengaturnya
+      if (boxPengumuman && labelJudulPengumuman) {
+        if (activeCfg.judulPengumuman && activeCfg.judulPengumuman.trim()) {
+          boxPengumuman.classList.remove('hidden');
+          labelJudulPengumuman.innerText = activeCfg.judulPengumuman;
+          if (labelIsiPengumuman) {
+            labelIsiPengumuman.innerText = activeCfg.catatanGudang || 'Harap perhatikan jadwal di atas saat memesan.';
+          }
+        } else {
+          boxPengumuman.classList.add('hidden');
+        }
+      }
 
       if (badgeContainer && labelStatus) {
         const st = (activeCfg.statusOperasional || 'normal').toLowerCase();
@@ -1311,53 +1411,32 @@ function jsonResponse(obj) {
       }
     }
 
-    function switchAdminSubTab(subtab) {
-      triggerHaptic(15);
-      const tabPapan = document.getElementById('subtabAdminPapan');
-      const tabUser = document.getElementById('subtabAdminUser');
-      const tabScript = document.getElementById('subtabAdminScript');
-      const btnPapan = document.getElementById('btnAdminTabPapan');
-      const btnUser = document.getElementById('btnAdminTabUser');
-      const btnScript = document.getElementById('btnAdminTabScript');
-
-      const activeBtnClass = "flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all bg-white text-ink shadow-sm flex items-center justify-center gap-1.5 tap-press";
-      const inactiveBtnClass = "flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all text-soft hover:text-white flex items-center justify-center gap-1.5 tap-press";
-
-      tabPapan.classList.toggle('hidden', subtab !== 'papan');
-      tabUser.classList.toggle('hidden', subtab !== 'user');
-      tabScript.classList.toggle('hidden', subtab !== 'script');
-
-      btnPapan.className = subtab === 'papan' ? activeBtnClass : inactiveBtnClass;
-      btnUser.className = subtab === 'user' ? activeBtnClass : inactiveBtnClass;
-      btnScript.className = subtab === 'script' ? activeBtnClass : inactiveBtnClass;
-
-      if (subtab === 'user') {
-        muatUsersDariSpreadsheet();
-      }
-      lucide.createIcons();
-    }
-
     function populasiTargetTokoDropdown() {
       const select = document.getElementById('cfgTargetToko');
       if (!select) return;
 
-      const currentVal = select.value || '__DEFAULT__';
+      const currentVal = select.value || targetTokoAdminTerpilih || '__DEFAULT__';
       select.innerHTML = '<option value="__DEFAULT__">🌐 Default (Semua Toko)</option>';
 
-      // Kumpulkan semua nama toko unik dari database user atau config
-      const listToko = new Set();
+      // Kumpulkan semua nama toko unik dari database user dan sheet config
+      const listToko = new Map();
       daftarUsersGlobal.forEach(u => {
-        if (u.namaToko && u.namaToko.toLowerCase() !== 'admin') listToko.add(u.namaToko);
+        if (u.namaToko && u.namaToko.toLowerCase() !== 'admin') {
+          listToko.set(u.namaToko, u.username ? `(${u.username})` : '');
+        }
       });
       Object.keys(multiConfigGudang).forEach(k => {
-        if (k !== '__DEFAULT__') listToko.add(k);
+        if (k !== '__DEFAULT__' && !listToko.has(k)) {
+          listToko.set(k, '');
+        }
       });
 
-      listToko.forEach(toko => {
-        const isKhusus = !!multiConfigGudang[toko];
+      listToko.forEach((info, toko) => {
+        const cfgToko = multiConfigGudang[toko];
+        const isKhusus = !!cfgToko;
         const opt = document.createElement('option');
         opt.value = toko;
-        opt.innerText = `${toko} ${isKhusus ? '⭐ (Khusus)' : ''}`;
+        opt.innerText = `${toko} ${info} ${isKhusus ? '⭐ [Aturan Khusus]' : ''}`;
         select.appendChild(opt);
       });
 
@@ -1370,10 +1449,14 @@ function jsonResponse(obj) {
       const isDefault = target === '__DEFAULT__';
       const ketEl = document.getElementById('targetTokoKeterangan');
       const btnReset = document.getElementById('btnHapusConfigKhusus');
+      const typeLabel = document.getElementById('labelTokoConfigType');
 
-      const activeCfg = isDefault ? (multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG) : getConfigUntukToko(target);
+      const activeCfg = isDefault ? 
+        (multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG) : 
+        getConfigUntukToko(target);
 
       document.getElementById('cfgStatusOperasional').value = activeCfg.statusOperasional || 'normal';
+      document.getElementById('cfgJudulPengumuman').value = activeCfg.judulPengumuman || '';
       document.getElementById('cfgJamBuka').value = activeCfg.jamBuka || '';
       document.getElementById('cfgHariLibur').value = activeCfg.hariLibur || '';
       document.getElementById('cfgCutOffJam').value = activeCfg.cutOffJam || '';
@@ -1383,28 +1466,29 @@ function jsonResponse(obj) {
       document.getElementById('cfgNomorTel').value = activeCfg.nomorTelAdmin || '';
 
       if (isDefault) {
+        if (typeLabel) {
+          typeLabel.className = 'text-gold font-bold';
+          typeLabel.innerText = '🌐 Standar Global (Semua Toko)';
+        }
         ketEl.innerText = 'Mengatur informasi default untuk semua toko yang tidak memiliki jadwal khusus.';
         btnReset.classList.add('hidden');
       } else {
         const hasCustom = !!multiConfigGudang[target];
+        if (typeLabel) {
+          if (hasCustom) {
+            typeLabel.className = 'text-pink font-bold';
+            typeLabel.innerText = '⭐ Konfigurasi Khusus Toko';
+          } else {
+            typeLabel.className = 'text-soft font-bold';
+            typeLabel.innerText = 'Mengikuti Default (Belum Ada Aturan Khusus)';
+          }
+        }
         ketEl.innerText = hasCustom ?
-          `Pengaturan KHUSUS aktif untuk "${target}". Jadwal ini hanya dilihat oleh akun toko ini.` :
-          `Toko "${target}" saat ini masih memakai pengaturan Default. Ubah data di bawah untuk membuat aturan khusus.`;
+          `Toko "${target}" memiliki jadwal/pengumuman KHUSUS. Hanya akun toko ini yang akan melihat informasi di bawah.` :
+          `Toko "${target}" saat ini masih memakai aturan Default. Edit dan simpan formulir di bawah untuk membuat aturan khusus hanya untuk toko ini.`;
         btnReset.classList.toggle('hidden', !hasCustom);
       }
-    }
-
-    function bukaModalAdmin() {
-      if (!isAdmin) return;
-      triggerHaptic(20);
-      populasiTargetTokoDropdown();
-      document.getElementById('alertAdminPanel').classList.add('hidden');
-      document.getElementById('modalAdminPanel').classList.remove('hidden');
-      switchAdminSubTab('papan');
-    }
-
-    function tutupModalAdmin() {
-      document.getElementById('modalAdminPanel').classList.add('hidden');
+      lucide.createIcons();
     }
 
     async function simpanConfigGudangKeSpreadsheet() {
@@ -1415,6 +1499,7 @@ function jsonResponse(obj) {
 
       const payloadConfig = {
         statusOperasional: document.getElementById('cfgStatusOperasional').value,
+        judulPengumuman: document.getElementById('cfgJudulPengumuman').value.trim(),
         jamBuka: document.getElementById('cfgJamBuka').value.trim() || DEFAULT_CONFIG_GUDANG.jamBuka,
         hariLibur: document.getElementById('cfgHariLibur').value.trim() || DEFAULT_CONFIG_GUDANG.hariLibur,
         cutOffJam: document.getElementById('cfgCutOffJam').value.trim() || DEFAULT_CONFIG_GUDANG.cutOffJam,
