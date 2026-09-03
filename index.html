@@ -354,8 +354,21 @@
         </div>
         <div>
           <h1 class="font-display font-bold text-base tracking-tight leading-none">
+            <span class="gradient-text">Duta</span><span class="text-soft"> Abadi</span>
+          </h1>
+          <p class="text-[10px] font-mono text-soft leading-none mt-1">Mobile Order</p>
+        </div>
+      </div>
+
       <!-- Top Actions (Store Badge, Theme Switch & Mode Switch) -->
       <div class="flex items-center gap-2">
+        <!-- Admin Panel Action Button (Visible for Admin) -->
+        <button id="btnAdminPanel" onclick="bukaModalAdmin()" title="Kelola Info Gudang"
+                class="hidden items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gold/15 border border-gold/40 text-gold text-[11px] font-mono font-semibold hover:bg-gold/25 transition-all tap-press">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Admin</span>
+        </button>
+
         <!-- Theme Switcher (Dark / Light) -->
         <button id="btnToggleTheme" onclick="toggleTheme()" title="Ganti Mode Terang / Gelap"
                 class="flex items-center justify-center w-8 h-8 rounded-xl bg-black/5 dark:bg-white/5 border border-line text-zinc-600 dark:text-zinc-300 hover:text-pink transition-all tap-press">
@@ -487,7 +500,7 @@
               <div class="flex items-center justify-between">
                 <span class="text-xs font-display font-semibold text-white flex items-center gap-1.5">
                   <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink"></i>
-                  Cari Produk
+                  Cari Produk Grosir
                 </span>
                 <label class="flex items-center gap-1.5 cursor-pointer text-[11px] font-mono text-soft select-none tap-press">
                   <input type="checkbox" id="switchStok" checked class="rounded bg-ink border-line text-pink focus:ring-0 w-3.5 h-3.5 cursor-pointer" />
@@ -561,10 +574,17 @@
                 <i data-lucide="bell" class="w-3.5 h-3.5 text-gold"></i>
                 Papan Info Gudang
               </span>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/10 border border-leaf/30 text-leaf flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span>
-                Operasional Normal
-              </span>
+              <div class="flex items-center gap-2">
+                <button id="btnEditInfoAdmin" onclick="bukaModalAdmin()" title="Edit Info Gudang"
+                        class="hidden items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/40 text-gold hover:bg-gold/25 tap-press">
+                  <i data-lucide="pencil" class="w-3 h-3"></i>
+                  <span>Edit</span>
+                </button>
+                <span id="statusOperasionalBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/10 border border-leaf/30 text-leaf flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span>
+                  <span id="labelStatusOperasional">Operasional Normal</span>
+                </span>
+              </div>
             </div>
 
             <!-- Jam Operasional & Jadwal Pengiriman -->
@@ -574,8 +594,8 @@
                   <i data-lucide="clock" class="w-3.5 h-3.5 text-sea"></i>
                   <span>Jam Operasional</span>
                 </div>
-                <p class="text-xs font-semibold text-white">Senin - Sabtu: 08.00 - 17.00 WIB</p>
-                <p class="text-[10px] font-mono text-soft">Minggu & Hari Besar: Tutup</p>
+                <p id="labelJamBuka" class="text-xs font-semibold text-white">Senin - Sabtu: 08.00 - 17.00 WIB</p>
+                <p id="labelHariLibur" class="text-[10px] font-mono text-soft">Minggu & Hari Besar: Tutup</p>
               </div>
 
               <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
@@ -583,15 +603,15 @@
                   <i data-lucide="truck" class="w-3.5 h-3.5"></i>
                   <span>Cut-off Pengiriman Hari Ini</span>
                 </div>
-                <p class="text-xs font-semibold text-white">Maksimal Order Pukul 13.00 WIB</p>
-                <p class="text-[10px] font-mono text-soft">Order setelah jam 13.00 dikirim rute besok</p>
+                <p id="labelCutOffJam" class="text-xs font-semibold text-white">Maksimal Order Pukul 13.00 WIB</p>
+                <p id="labelCutOffDesc" class="text-[10px] font-mono text-soft">Order setelah jam 13.00 dikirim rute besok</p>
               </div>
             </div>
 
             <!-- Catatan Pengemasan & Penerimaan -->
             <div class="p-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start gap-2.5 text-xs text-soft">
               <i data-lucide="shield-alert" class="w-4 h-4 text-pink shrink-0 mt-0.5"></i>
-              <p class="text-[11px] leading-relaxed">
+              <p id="labelCatatanGudang" class="text-[11px] leading-relaxed">
                 Pastikan mencocokkan jumlah koli & surat jalan saat kurir tiba. Konfirmasi resi membutuhkan 6 digit kode dari kurir.
               </p>
             </div>
@@ -862,6 +882,306 @@
     </div>
   </div>
 
+  <!-- ==================== ADMIN CONFIGURATION MODAL ==================== -->
+  <div id="modalAdminPanel" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="liquid-glass rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 bg-panel/95 border-t sm:border border-line w-full max-w-2xl shadow-2xl relative max-h-[92vh] flex flex-col space-y-4">
+      <div class="w-12 h-1 bg-white/20 rounded-full mx-auto -mt-1 sm:hidden"></div>
+
+      <!-- Header Modal & Status Sinkronisasi Spreadsheet -->
+      <div class="flex items-center justify-between pb-3 border-b border-line">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gold/15 border border-gold/30 flex items-center justify-center text-gold">
+            <i data-lucide="database" class="w-4.5 h-4.5"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-white flex items-center gap-2">
+              <span>Panel Kontrol Admin</span>
+              <span id="syncBadgeSpreadsheet" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/15 border border-leaf/30 text-leaf flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span>
+                <span>Spreadsheet Live</span>
+              </span>
+            </h3>
+            <p class="text-[11px] font-mono text-soft">Sinkronisasi Papan Info & Akun Toko di Google Sheets</p>
+          </div>
+        </div>
+        <button onclick="tutupModalAdmin()" class="p-1.5 rounded-lg text-soft hover:text-white tap-press">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Tab Navigasi Admin: Papan Toko vs Manajemen User vs Script Backend -->
+      <div class="flex p-1 rounded-xl bg-ink/70 border border-line gap-1">
+        <button type="button" id="btnAdminTabPapan" onclick="switchAdminSubTab('papan')"
+                class="flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all bg-white text-ink shadow-sm flex items-center justify-center gap-1.5 tap-press">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+          <span>Papan Info Toko</span>
+        </button>
+        <button type="button" id="btnAdminTabUser" onclick="switchAdminSubTab('user')"
+                class="flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all text-soft hover:text-white flex items-center justify-center gap-1.5 tap-press">
+          <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <span>Manajemen User</span>
+        </button>
+        <button type="button" id="btnAdminTabScript" onclick="switchAdminSubTab('script')"
+                class="flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all text-soft hover:text-white flex items-center justify-center gap-1.5 tap-press">
+          <i data-lucide="code" class="w-3.5 h-3.5"></i>
+          <span>Kode Apps Script</span>
+        </button>
+      </div>
+
+      <!-- Alert Notifikasi Modal Admin -->
+      <div id="alertAdminPanel" class="hidden text-xs p-2.5 rounded-xl border font-mono"></div>
+
+      <!-- ==================== SUBTAB 1: PAPAN INFORMASI & JADWAL ==================== -->
+      <div id="subtabAdminPapan" class="overflow-y-auto no-scrollbar space-y-3.5 flex-1 pr-1">
+        <!-- Target Toko Selector -->
+        <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-mono uppercase tracking-wider text-gold flex items-center gap-1.5 font-bold">
+              <i data-lucide="target" class="w-3.5 h-3.5"></i>
+              <span>Pilih Target Tampilan Toko</span>
+            </label>
+            <button type="button" id="btnHapusConfigKhusus" onclick="hapusConfigKhususToko()"
+                    class="hidden text-[10px] font-mono px-2 py-0.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 hover:bg-red-500/25 tap-press">
+              Kembalikan ke Default
+            </button>
+          </div>
+          <select id="cfgTargetToko" onchange="gantiTargetTokoAdmin(this.value)"
+                  class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs font-semibold text-white outline-none focus:border-gold">
+            <option value="__DEFAULT__">🌐 Default (Semua Toko)</option>
+          </select>
+          <p id="targetTokoKeterangan" class="text-[10px] font-mono text-soft">
+            Mengatur informasi umum untuk semua toko yang tidak memiliki jadwal khusus.
+          </p>
+        </div>
+
+        <form id="formConfigPapan" onsubmit="event.preventDefault(); simpanConfigGudangKeSpreadsheet();" class="space-y-3">
+          <!-- Status Operasional -->
+          <div>
+            <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Status Operasional Gudang</label>
+            <select id="cfgStatusOperasional"
+                    class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold">
+              <option value="normal">Operasional Normal (Hijau)</option>
+              <option value="padat">Antrean Padat / Overload (Kuning)</option>
+              <option value="tutup">Tutup Sementara (Merah)</option>
+            </select>
+          </div>
+
+          <!-- Jam Buka & Hari Libur -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Jam Operasional</label>
+              <input type="text" id="cfgJamBuka" placeholder="Senin - Sabtu: 08.00 - 17.00 WIB"
+                     class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Keterangan Libur</label>
+              <input type="text" id="cfgHariLibur" placeholder="Minggu & Hari Besar: Tutup"
+                     class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold" />
+            </div>
+          </div>
+
+          <!-- Cut-off Pengiriman -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Batas Order (Cut-Off)</label>
+              <input type="text" id="cfgCutOffJam" placeholder="Maksimal Order Pukul 13.00 WIB"
+                     class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Keterangan Pengiriman</label>
+              <input type="text" id="cfgCutOffDesc" placeholder="Order setelah jam 13.00 dikirim rute besok"
+                     class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold" />
+            </div>
+          </div>
+
+          <!-- Catatan / SOP Gudang -->
+          <div>
+            <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Catatan SOP / Pengumuman Toko</label>
+            <textarea id="cfgCatatanGudang" rows="2" placeholder="Instruksi penerimaan barang..."
+                      class="w-full bg-ink/90 border border-line rounded-xl p-2.5 text-xs text-white outline-none focus:border-gold resize-none"></textarea>
+          </div>
+
+          <!-- Nomor Kontak Admin -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Nomor WhatsApp Admin</label>
+              <input type="text" id="cfgNomorWa" placeholder="628xxxxxxxxxx"
+                     class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs font-mono text-white outline-none focus:border-gold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Nomor Telepon Darurat</label>
+              <input type="text" id="cfgNomorTel" placeholder="628xxxxxxxxxx"
+                     class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs font-mono text-white outline-none focus:border-gold" />
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-line flex items-center justify-between gap-2">
+            <button type="button" onclick="muatUlangConfigDariServer()"
+                    class="py-2.5 px-3 rounded-xl text-xs font-mono text-soft hover:text-white bg-white/5 border border-white/10 flex items-center gap-1.5 tap-press">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Tarik dari Sheets</span>
+            </button>
+
+            <button type="submit" id="btnSimpanConfig"
+                    class="py-2.5 px-5 rounded-xl font-display font-bold text-xs text-ink bg-gold hover:bg-amber-400 transition-colors flex items-center gap-1.5 tap-press shadow-md">
+              <i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i>
+              <span>Simpan ke Spreadsheet</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ==================== SUBTAB 2: MANAJEMEN AKUN TOKO (USERS) ==================== -->
+      <div id="subtabAdminUser" class="hidden overflow-y-auto no-scrollbar space-y-3.5 flex-1 pr-1">
+        <!-- Form Tambah / Edit User -->
+        <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 id="formUserTitle" class="text-xs font-display font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5 text-pink"></i>
+              <span>Tambah Akun Toko Baru</span>
+            </h4>
+            <button type="button" id="btnResetFormUser" onclick="resetFormUserAdmin()" class="hidden text-[10px] font-mono text-soft hover:text-white">
+              Batal Edit
+            </button>
+          </div>
+
+          <form onsubmit="event.preventDefault(); simpanUserAdminKeSpreadsheet();" class="space-y-2.5">
+            <input type="hidden" id="userEditMode" value="create" />
+            <input type="hidden" id="userOriginalUsername" value="" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-mono text-soft uppercase mb-1">Username Login</label>
+                <input type="text" id="formUserUsername" placeholder="contoh: toko_makmur" required autocapitalize="none"
+                       class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2 text-xs font-mono text-white outline-none focus:border-pink" />
+              </div>
+              <div>
+                <label class="block text-[10px] font-mono text-soft uppercase mb-1">Password</label>
+                <input type="text" id="formUserPassword" placeholder="Ketik password..." required
+                       class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2 text-xs font-mono text-white outline-none focus:border-pink" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-mono text-soft uppercase mb-1">Nama Toko Resmi</label>
+                <input type="text" id="formUserNamaToko" placeholder="contoh: Toko Makmur Jaya" required
+                       class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-pink" />
+              </div>
+              <div>
+                <label class="block text-[10px] font-mono text-soft uppercase mb-1">Role / Peran</label>
+                <select id="formUserRole" class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-pink">
+                  <option value="user">Toko (User Pemesan)</option>
+                  <option value="admin">Admin Gudang (Full Access)</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" id="btnSubmitUser"
+                    class="w-full py-2.5 rounded-xl font-display font-semibold text-xs text-ink bg-white hover:bg-pink transition-all flex items-center justify-center gap-1.5 tap-press shadow-sm">
+              <i data-lucide="save" class="w-3.5 h-3.5"></i>
+              <span id="btnSubmitUserLabel">Simpan User ke Spreadsheet</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Daftar User Toko di Spreadsheet -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-mono text-soft uppercase tracking-wider flex items-center gap-1">
+              <span>Daftar Akun Toko</span>
+              <span id="labelTotalUserCount" class="text-white font-bold">(0)</span>
+            </span>
+            <button type="button" onclick="muatUsersDariSpreadsheet()"
+                    class="text-[11px] font-mono text-soft hover:text-white flex items-center gap-1 tap-press">
+              <i data-lucide="rotate-cw" class="w-3 h-3"></i>
+              <span>Refresh User</span>
+            </button>
+          </div>
+
+          <div id="listUsersContainer" class="space-y-2">
+            <div class="p-4 text-center text-xs font-mono text-soft rounded-2xl bg-white/[0.02] border border-white/5">
+              Mengambil daftar user dari Spreadsheet...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SUBTAB 3: PETUNJUK & KODE APPS SCRIPT ==================== -->
+      <div id="subtabAdminScript" class="hidden overflow-y-auto no-scrollbar space-y-3 flex-1 pr-1">
+        <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/10 space-y-1.5">
+          <h4 class="text-xs font-display font-bold text-white flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-gold"></i>
+            <span>Sinkronisasi Google Spreadsheet</span>
+          </h4>
+          <p class="text-[11px] text-soft leading-relaxed">
+            Agar spreadsheet Anda otomatis memiliki sheet <code class="text-gold font-mono">Config</code> dan sheet <code class="text-pink font-mono">Users</code>, salin kode Apps Script di bawah ini ke <strong>Extensions > Apps Script</strong> di Google Sheets Anda, lalu klik <strong>Deploy > New deployment</strong> (Pilih Web App: <em>Anyone can access</em>).
+          </p>
+        </div>
+
+        <div class="relative">
+          <button type="button" onclick="salinKodeAppsScript()" id="btnSalinScript"
+                  class="absolute top-2.5 right-2.5 px-3 py-1.5 rounded-lg text-[11px] font-mono font-semibold bg-white text-ink hover:bg-gold transition-colors flex items-center gap-1.5 shadow-md tap-press">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>Salin Kode</span>
+          </button>
+          <pre class="bg-black/80 border border-line rounded-2xl p-3.5 text-[10px] font-mono text-zinc-300 overflow-x-auto max-h-72 leading-relaxed" id="codeAppsScriptBlock">
+// =====================================================================
+// SCRIPT GOOGLE APPS SCRIPT - DUTA ABADI ORDER PORTAL
+// Terintegrasi: Inventori, Multi-Store Order, Tracking, Config & Users
+// =====================================================================
+
+const SPREADSHEET_ID = '1O144AOwQ6_FrxhfrdbZ54Nox7pDC2cWy5illCHvdgTk';
+
+function doGet(e) {
+  try {
+    const action = e.parameter.action;
+    let result = {};
+
+    if (action === 'getBarang') result = { success: true, data: getDaftarBarang() };
+    else if (action === 'getRiwayat') result = getRiwayatToko(e.parameter.namaToko);
+    else if (action === 'getAllConfig') result = handleGetAllConfig();
+    else if (action === 'getConfig') result = handleGetConfig(e.parameter.toko);
+    else if (action === 'getUsers') result = handleGetUsers();
+    else result = { success: false, message: 'Action GET tidak valid.' };
+
+    return jsonResponse(result);
+  } catch (error) {
+    return jsonResponse({ success: false, message: error.message });
+  }
+}
+
+function doPost(e) {
+  try {
+    const requestData = JSON.parse(e.postData.contents);
+    const action = requestData.action;
+    let result = {};
+
+    if (action === 'login') result = prosesLogin(requestData.username, requestData.password);
+    else if (action === 'simpanPesanan') result = simpanPesanan(requestData.orderData);
+    else if (action === 'updateStatus') result = updateStatusSelesai(requestData.idPesanan, requestData.namaToko, requestData.kodeUnik);
+    else if (action === 'saveConfig') result = handleSaveConfig(requestData.targetToko, requestData.config);
+    else if (action === 'deleteConfig') result = handleDeleteConfig(requestData.targetToko);
+    else if (action === 'saveUser') result = handleSaveUser(requestData.user, requestData.mode, requestData.originalUsername);
+    else if (action === 'deleteUser') result = handleDeleteUser(requestData.username);
+    else result = { success: false, message: 'Action POST tidak valid.' };
+
+    return jsonResponse(result);
+  } catch (error) {
+    return jsonResponse({ success: false, message: error.message });
+  }
+}
+
+function jsonResponse(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+          </pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Hidden Printable Receipt Container -->
   <div id="printableReceipt" class="hidden text-black bg-white"></div>
 
@@ -870,11 +1190,12 @@
        CONFIG & APPLICATION STATE
        ===================================================================== */
     const API_URL = "https://script.google.com/macros/s/AKfycbz0_yJK_GuYKFezG0UleR6usXt6tjsCbvd2Xg5VHrxXmeh8kJgfcZf57Y4KeLqZ6uT75g/exec";
-    const NOMOR_ADMIN_GUDANG = "6281234567890"; // Ganti dengan nomor WhatsApp Admin Gudang Duta Abadi
+    const NOMOR_ADMIN_GUDANG = "6281234567890"; // Nomor WhatsApp default
 
     let currentTheme = 'dark';
     let viewMode = 'mobile'; // Default to mobile as requested
     let namaTokoAktif = "";
+    let isAdmin = false;
     let dataRiwayatGlobal = [];
     let filterStatusAktif = "Semua";
     let idPesananAkanDiselesaikan = "";
@@ -885,6 +1206,512 @@
     let keranjang = [];
     let ketikTimer = null;
     let activeTab = 'order';
+
+    // Konfigurasi Default & Penyimpanan Multi-Toko dari Spreadsheet
+    const DEFAULT_CONFIG_GUDANG = {
+      statusOperasional: 'normal',
+      jamBuka: 'Senin - Sabtu: 08.00 - 17.00 WIB',
+      hariLibur: 'Minggu & Hari Besar: Tutup',
+      cutOffJam: 'Maksimal Order Pukul 13.00 WIB',
+      cutOffDesc: 'Order setelah jam 13.00 dikirim rute besok',
+      catatanGudang: 'Pastikan mencocokkan jumlah koli & surat jalan saat kurir tiba. Konfirmasi resi membutuhkan 6 digit kode dari kurir.',
+      nomorWaAdmin: NOMOR_ADMIN_GUDANG,
+      nomorTelAdmin: NOMOR_ADMIN_GUDANG
+    };
+
+    // Objek penyimpan seluruh config: key '__DEFAULT__' untuk umum, dan key [namaToko] untuk per-toko
+    let multiConfigGudang = {
+      '__DEFAULT__': { ...DEFAULT_CONFIG_GUDANG }
+    };
+
+    // Daftar akun user / toko tersimpan (tersinkronisasi dengan Spreadsheet)
+    let daftarUsersGlobal = [];
+    let targetTokoAdminTerpilih = '__DEFAULT__';
+
+    async function initConfigGudang() {
+      // 1. Baca cache lokal dulu agar UI langsung tampil cepat tanpa jeda putih
+      try {
+        const cachedMulti = localStorage.getItem('duta_abadi_multi_config');
+        if (cachedMulti) {
+          multiConfigGudang = { ...multiConfigGudang, ...JSON.parse(cachedMulti) };
+        }
+        const cachedUsers = localStorage.getItem('duta_abadi_cached_users');
+        if (cachedUsers) {
+          daftarUsersGlobal = JSON.parse(cachedUsers);
+        }
+      } catch (e) {
+        console.warn('Gagal membaca cache lokal:', e);
+      }
+
+      renderPapanInfoGudang();
+
+      // 2. Ambil data konfigurasi mutakhir dari Google Spreadsheet
+      await sinkronisasiConfigDariSpreadsheet();
+    }
+
+    async function sinkronisasiConfigDariSpreadsheet() {
+      const badge = document.getElementById('syncBadgeSpreadsheet');
+      try {
+        const response = await fetch(`${API_URL}?action=getAllConfig`, { method: 'GET' });
+        const res = await response.json();
+        if (res.success && res.data) {
+          multiConfigGudang = { ...multiConfigGudang, ...res.data };
+          localStorage.setItem('duta_abadi_multi_config', JSON.stringify(multiConfigGudang));
+          if (badge) {
+            badge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/15 border border-leaf/30 text-leaf flex items-center gap-1";
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-leaf"></span><span>Sheets Live</span>`;
+          }
+          renderPapanInfoGudang();
+          populasiTargetTokoDropdown();
+        }
+      } catch (err) {
+        console.warn('Gagal menarik config dari Spreadsheet, menggunakan cache:', err);
+        if (badge) {
+          badge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/30 text-gold flex items-center gap-1";
+          badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-gold"></span><span>Offline Cache</span>`;
+        }
+      }
+    }
+
+    function getConfigUntukToko(namaToko) {
+      if (namaToko && multiConfigGudang[namaToko]) {
+        return { ...multiConfigGudang['__DEFAULT__'], ...multiConfigGudang[namaToko], isCustom: true };
+      }
+      return { ...(multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG), isCustom: false };
+    }
+
+    function renderPapanInfoGudang() {
+      const activeCfg = getConfigUntukToko(namaTokoAktif);
+      const badgeContainer = document.getElementById('statusOperasionalBadge');
+      const labelStatus = document.getElementById('labelStatusOperasional');
+      const labelJamBuka = document.getElementById('labelJamBuka');
+      const labelHariLibur = document.getElementById('labelHariLibur');
+      const labelCutOffJam = document.getElementById('labelCutOffJam');
+      const labelCutOffDesc = document.getElementById('labelCutOffDesc');
+      const labelCatatan = document.getElementById('labelCatatanGudang');
+
+      if (labelJamBuka) labelJamBuka.innerText = activeCfg.jamBuka;
+      if (labelHariLibur) labelHariLibur.innerText = activeCfg.hariLibur;
+      if (labelCutOffJam) labelCutOffJam.innerText = activeCfg.cutOffJam;
+      if (labelCutOffDesc) labelCutOffDesc.innerText = activeCfg.cutOffDesc;
+      if (labelCatatan) labelCatatan.innerText = activeCfg.catatanGudang;
+
+      if (badgeContainer && labelStatus) {
+        const st = (activeCfg.statusOperasional || 'normal').toLowerCase();
+        if (st === 'padat') {
+          badgeContainer.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/30 text-amber-300 flex items-center gap-1";
+          badgeContainer.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span><span>Antrean Padat</span>`;
+        } else if (st === 'tutup') {
+          badgeContainer.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 flex items-center gap-1";
+          badgeContainer.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-400"></span><span>Tutup Sementara</span>`;
+        } else {
+          badgeContainer.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/10 border border-leaf/30 text-leaf flex items-center gap-1";
+          badgeContainer.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span><span>Operasional Normal</span>`;
+        }
+      }
+    }
+
+    function switchAdminSubTab(subtab) {
+      triggerHaptic(15);
+      const tabPapan = document.getElementById('subtabAdminPapan');
+      const tabUser = document.getElementById('subtabAdminUser');
+      const tabScript = document.getElementById('subtabAdminScript');
+      const btnPapan = document.getElementById('btnAdminTabPapan');
+      const btnUser = document.getElementById('btnAdminTabUser');
+      const btnScript = document.getElementById('btnAdminTabScript');
+
+      const activeBtnClass = "flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all bg-white text-ink shadow-sm flex items-center justify-center gap-1.5 tap-press";
+      const inactiveBtnClass = "flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all text-soft hover:text-white flex items-center justify-center gap-1.5 tap-press";
+
+      tabPapan.classList.toggle('hidden', subtab !== 'papan');
+      tabUser.classList.toggle('hidden', subtab !== 'user');
+      tabScript.classList.toggle('hidden', subtab !== 'script');
+
+      btnPapan.className = subtab === 'papan' ? activeBtnClass : inactiveBtnClass;
+      btnUser.className = subtab === 'user' ? activeBtnClass : inactiveBtnClass;
+      btnScript.className = subtab === 'script' ? activeBtnClass : inactiveBtnClass;
+
+      if (subtab === 'user') {
+        muatUsersDariSpreadsheet();
+      }
+      lucide.createIcons();
+    }
+
+    function populasiTargetTokoDropdown() {
+      const select = document.getElementById('cfgTargetToko');
+      if (!select) return;
+
+      const currentVal = select.value || '__DEFAULT__';
+      select.innerHTML = '<option value="__DEFAULT__">🌐 Default (Semua Toko)</option>';
+
+      // Kumpulkan semua nama toko unik dari database user atau config
+      const listToko = new Set();
+      daftarUsersGlobal.forEach(u => {
+        if (u.namaToko && u.namaToko.toLowerCase() !== 'admin') listToko.add(u.namaToko);
+      });
+      Object.keys(multiConfigGudang).forEach(k => {
+        if (k !== '__DEFAULT__') listToko.add(k);
+      });
+
+      listToko.forEach(toko => {
+        const isKhusus = !!multiConfigGudang[toko];
+        const opt = document.createElement('option');
+        opt.value = toko;
+        opt.innerText = `${toko} ${isKhusus ? '⭐ (Khusus)' : ''}`;
+        select.appendChild(opt);
+      });
+
+      select.value = currentVal;
+      gantiTargetTokoAdmin(select.value, false);
+    }
+
+    function gantiTargetTokoAdmin(target, triggerAlert = true) {
+      targetTokoAdminTerpilih = target;
+      const isDefault = target === '__DEFAULT__';
+      const ketEl = document.getElementById('targetTokoKeterangan');
+      const btnReset = document.getElementById('btnHapusConfigKhusus');
+
+      const activeCfg = isDefault ? (multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG) : getConfigUntukToko(target);
+
+      document.getElementById('cfgStatusOperasional').value = activeCfg.statusOperasional || 'normal';
+      document.getElementById('cfgJamBuka').value = activeCfg.jamBuka || '';
+      document.getElementById('cfgHariLibur').value = activeCfg.hariLibur || '';
+      document.getElementById('cfgCutOffJam').value = activeCfg.cutOffJam || '';
+      document.getElementById('cfgCutOffDesc').value = activeCfg.cutOffDesc || '';
+      document.getElementById('cfgCatatanGudang').value = activeCfg.catatanGudang || '';
+      document.getElementById('cfgNomorWa').value = activeCfg.nomorWaAdmin || '';
+      document.getElementById('cfgNomorTel').value = activeCfg.nomorTelAdmin || '';
+
+      if (isDefault) {
+        ketEl.innerText = 'Mengatur informasi default untuk semua toko yang tidak memiliki jadwal khusus.';
+        btnReset.classList.add('hidden');
+      } else {
+        const hasCustom = !!multiConfigGudang[target];
+        ketEl.innerText = hasCustom ?
+          `Pengaturan KHUSUS aktif untuk "${target}". Jadwal ini hanya dilihat oleh akun toko ini.` :
+          `Toko "${target}" saat ini masih memakai pengaturan Default. Ubah data di bawah untuk membuat aturan khusus.`;
+        btnReset.classList.toggle('hidden', !hasCustom);
+      }
+    }
+
+    function bukaModalAdmin() {
+      if (!isAdmin) return;
+      triggerHaptic(20);
+      populasiTargetTokoDropdown();
+      document.getElementById('alertAdminPanel').classList.add('hidden');
+      document.getElementById('modalAdminPanel').classList.remove('hidden');
+      switchAdminSubTab('papan');
+    }
+
+    function tutupModalAdmin() {
+      document.getElementById('modalAdminPanel').classList.add('hidden');
+    }
+
+    async function simpanConfigGudangKeSpreadsheet() {
+      triggerHaptic(40);
+      const btn = document.getElementById('btnSimpanConfig');
+      const alertBox = document.getElementById('alertAdminPanel');
+      const target = targetTokoAdminTerpilih;
+
+      const payloadConfig = {
+        statusOperasional: document.getElementById('cfgStatusOperasional').value,
+        jamBuka: document.getElementById('cfgJamBuka').value.trim() || DEFAULT_CONFIG_GUDANG.jamBuka,
+        hariLibur: document.getElementById('cfgHariLibur').value.trim() || DEFAULT_CONFIG_GUDANG.hariLibur,
+        cutOffJam: document.getElementById('cfgCutOffJam').value.trim() || DEFAULT_CONFIG_GUDANG.cutOffJam,
+        cutOffDesc: document.getElementById('cfgCutOffDesc').value.trim() || DEFAULT_CONFIG_GUDANG.cutOffDesc,
+        catatanGudang: document.getElementById('cfgCatatanGudang').value.trim() || DEFAULT_CONFIG_GUDANG.catatanGudang,
+        nomorWaAdmin: document.getElementById('cfgNomorWa').value.trim() || DEFAULT_CONFIG_GUDANG.nomorWaAdmin,
+        nomorTelAdmin: document.getElementById('cfgNomorTel').value.trim() || DEFAULT_CONFIG_GUDANG.nomorTelAdmin
+      };
+
+      // Simpan ke memori lokal terlebih dahulu
+      multiConfigGudang[target] = payloadConfig;
+      localStorage.setItem('duta_abadi_multi_config', JSON.stringify(multiConfigGudang));
+      renderPapanInfoGudang();
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1">◌</span> Menyimpan ke Spreadsheet...`;
+
+      try {
+        const resFetch = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'saveConfig',
+            targetToko: target,
+            config: payloadConfig
+          }),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        const res = await resFetch.json();
+
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i><span>Simpan ke Spreadsheet</span>`;
+        lucide.createIcons();
+
+        alertBox.className = 'text-xs p-2.5 rounded-xl border border-leaf/40 bg-leaf/10 text-emerald-300 block font-mono';
+        alertBox.innerText = `✓ Berhasil tersimpan di Spreadsheet untuk target: ${target === '__DEFAULT__' ? 'Semua Toko' : target}`;
+        alertBox.classList.remove('hidden');
+
+        populasiTargetTokoDropdown();
+      } catch (err) {
+        console.warn('Gagal menyimpan langsung ke Spreadsheet (tetap tersimpan di cache lokal):', err);
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i><span>Simpan ke Spreadsheet</span>`;
+        lucide.createIcons();
+
+        alertBox.className = 'text-xs p-2.5 rounded-xl border border-gold/40 bg-gold/10 text-amber-300 block font-mono';
+        alertBox.innerText = `Tersimpan secara lokal. Gagal terhubung langsung ke Apps Script (${err.message || 'Jaringan'}).`;
+        alertBox.classList.remove('hidden');
+      }
+    }
+
+    async function hapusConfigKhususToko() {
+      if (targetTokoAdminTerpilih === '__DEFAULT__') return;
+      if (!confirm(`Hapus konfigurasi khusus untuk "${targetTokoAdminTerpilih}" dan kembalikan ke default?`)) return;
+
+      triggerHaptic(30);
+      delete multiConfigGudang[targetTokoAdminTerpilih];
+      localStorage.setItem('duta_abadi_multi_config', JSON.stringify(multiConfigGudang));
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'deleteConfig', targetToko: targetTokoAdminTerpilih }),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+      } catch (e) {
+        console.warn('Gagal sinkronisasi hapus ke spreadsheet:', e);
+      }
+
+      populasiTargetTokoDropdown();
+      renderPapanInfoGudang();
+    }
+
+    async function muatUlangConfigDariServer() {
+      triggerHaptic(20);
+      const alertBox = document.getElementById('alertAdminPanel');
+      alertBox.className = 'text-xs p-2 rounded-xl border border-white/20 bg-white/5 text-white block font-mono';
+      alertBox.innerText = 'Menarik konfigurasi terbaru dari Google Sheets...';
+      alertBox.classList.remove('hidden');
+
+      await sinkronisasiConfigDariSpreadsheet();
+
+      alertBox.className = 'text-xs p-2.5 rounded-xl border border-leaf/40 bg-leaf/10 text-emerald-300 block font-mono';
+      alertBox.innerText = '✓ Konfigurasi mutakhir berhasil disinkronkan!';
+    }
+
+    async function muatUsersDariSpreadsheet() {
+      const container = document.getElementById('listUsersContainer');
+      const countLabel = document.getElementById('labelTotalUserCount');
+      container.innerHTML = `<div class="p-3 text-center text-xs font-mono text-soft">Mengambil akun toko dari Google Sheets... ⏳</div>`;
+
+      try {
+        const response = await fetch(`${API_URL}?action=getUsers`, { method: 'GET' });
+        const res = await response.json();
+        if (res.success && res.data) {
+          daftarUsersGlobal = res.data;
+          localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+          renderDaftarUserAdmin();
+          populasiTargetTokoDropdown();
+        } else {
+          renderDaftarUserAdmin();
+        }
+      } catch (err) {
+        console.warn('Gagal memuat user dari server, menggunakan cache lokal:', err);
+        renderDaftarUserAdmin();
+      }
+    }
+
+    function renderDaftarUserAdmin() {
+      const container = document.getElementById('listUsersContainer');
+      const countLabel = document.getElementById('labelTotalUserCount');
+      countLabel.innerText = `(${daftarUsersGlobal.length})`;
+
+      container.innerHTML = '';
+      if (daftarUsersGlobal.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 text-center text-xs font-mono text-soft rounded-2xl bg-white/[0.02] border border-white/5">
+            Belum ada akun toko di database Spreadsheet.
+          </div>
+        `;
+        return;
+      }
+
+      daftarUsersGlobal.forEach((u, index) => {
+        const card = document.createElement('div');
+        const isAdminRole = (u.role || '').toLowerCase() === 'admin';
+        card.className = "p-3 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-2 hover:bg-white/[0.06] transition-colors";
+        card.innerHTML = `
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-bold text-xs text-white truncate">${escapeHtml(u.namaToko || u.username)}</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded ${isAdminRole ? 'bg-gold/20 text-gold border border-gold/40' : 'bg-sea/20 text-sky-300 border border-sea/40'}">${isAdminRole ? 'ADMIN' : 'TOKO'}</span>
+            </div>
+            <p class="text-[10px] font-mono text-soft mt-0.5">User: <strong class="text-zinc-200">${escapeHtml(u.username)}</strong> • Pass: <span class="font-mono text-zinc-400">${escapeHtml(u.password)}</span></p>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="editUserAdmin('${escapeHtml(u.username)}')" title="Edit Akun"
+                    class="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white tap-press">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="hapusUserAdmin('${escapeHtml(u.username)}')" title="Hapus Akun"
+                    class="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 tap-press">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function editUserAdmin(username) {
+      triggerHaptic(20);
+      const user = daftarUsersGlobal.find(u => u.username === username);
+      if (!user) return;
+
+      document.getElementById('userEditMode').value = 'edit';
+      document.getElementById('userOriginalUsername').value = user.username;
+      document.getElementById('formUserUsername').value = user.username;
+      document.getElementById('formUserPassword').value = user.password;
+      document.getElementById('formUserNamaToko').value = user.namaToko || user.username;
+      document.getElementById('formUserRole').value = (user.role || 'user').toLowerCase();
+
+      document.getElementById('formUserTitle').innerHTML = `<i data-lucide="pencil" class="w-3.5 h-3.5 text-gold"></i><span>Edit Akun Toko: ${escapeHtml(user.username)}</span>`;
+      document.getElementById('btnSubmitUserLabel').innerText = 'Perbarui Akun di Spreadsheet';
+      document.getElementById('btnResetFormUser').classList.remove('hidden');
+      lucide.createIcons();
+      document.getElementById('formUserUsername').focus();
+    }
+
+    function resetFormUserAdmin() {
+      document.getElementById('userEditMode').value = 'create';
+      document.getElementById('userOriginalUsername').value = '';
+      document.getElementById('formUserUsername').value = '';
+      document.getElementById('formUserPassword').value = '';
+      document.getElementById('formUserNamaToko').value = '';
+      document.getElementById('formUserRole').value = 'user';
+
+      document.getElementById('formUserTitle').innerHTML = `<i data-lucide="user-plus" class="w-3.5 h-3.5 text-pink"></i><span>Tambah Akun Toko Baru</span>`;
+      document.getElementById('btnSubmitUserLabel').innerText = 'Simpan User ke Spreadsheet';
+      document.getElementById('btnResetFormUser').classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    async function simpanUserAdminKeSpreadsheet() {
+      triggerHaptic(30);
+      const mode = document.getElementById('userEditMode').value;
+      const originalUsername = document.getElementById('userOriginalUsername').value;
+      const username = document.getElementById('formUserUsername').value.trim();
+      const password = document.getElementById('formUserPassword').value.trim();
+      const namaToko = document.getElementById('formUserNamaToko').value.trim();
+      const role = document.getElementById('formUserRole').value;
+      const btn = document.getElementById('btnSubmitUser');
+      const alertBox = document.getElementById('alertAdminPanel');
+
+      if (!username || !password || !namaToko) {
+        alert("Semua field user wajib diisi!");
+        return;
+      }
+
+      const userObj = { username, password, namaToko, role, status: 'Aktif' };
+
+      // Optimistic update pada memori lokal
+      if (mode === 'create') {
+        const exists = daftarUsersGlobal.some(u => u.username.toLowerCase() === username.toLowerCase());
+        if (exists) {
+          alert(`Username "${username}" sudah digunakan! Gunakan username lain.`);
+          return;
+        }
+        daftarUsersGlobal.unshift(userObj);
+      } else {
+        const idx = daftarUsersGlobal.findIndex(u => u.username === originalUsername);
+        if (idx !== -1) daftarUsersGlobal[idx] = userObj;
+      }
+      localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+      renderDaftarUserAdmin();
+      populasiTargetTokoDropdown();
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1">◌</span> Menyimpan User...`;
+
+      try {
+        const resFetch = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'saveUser',
+            user: userObj,
+            mode: mode,
+            originalUsername: originalUsername
+          }),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        const res = await resFetch.json();
+
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="save" class="w-3.5 h-3.5"></i><span>Simpan User ke Spreadsheet</span>`;
+        lucide.createIcons();
+
+        if (res.success) {
+          resetFormUserAdmin();
+          alertBox.className = 'text-xs p-2.5 rounded-xl border border-leaf/40 bg-leaf/10 text-emerald-300 block font-mono';
+          alertBox.innerText = `✓ Akun ${username} berhasil disimpan di Google Sheets!`;
+          alertBox.classList.remove('hidden');
+        } else {
+          alertBox.className = 'text-xs p-2.5 rounded-xl border border-gold/40 bg-gold/10 text-amber-300 block font-mono';
+          alertBox.innerText = res.message || 'Tersimpan lokal, periksa deployment Apps Script.';
+          alertBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="save" class="w-3.5 h-3.5"></i><span>Simpan User ke Spreadsheet</span>`;
+        lucide.createIcons();
+        resetFormUserAdmin();
+        alertBox.className = 'text-xs p-2.5 rounded-xl border border-gold/40 bg-gold/10 text-amber-300 block font-mono';
+        alertBox.innerText = 'Akun tersimpan di memori perangkat. Akan disinkronkan saat terhubung.';
+        alertBox.classList.remove('hidden');
+      }
+    }
+
+    async function hapusUserAdmin(username) {
+      if (!confirm(`Hapus akun toko "${username}" dari Spreadsheet?`)) return;
+      triggerHaptic(40);
+
+      daftarUsersGlobal = daftarUsersGlobal.filter(u => u.username !== username);
+      localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+      renderDaftarUserAdmin();
+      populasiTargetTokoDropdown();
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'deleteUser', username: username }),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+      } catch (err) {
+        console.warn('Gagal menghapus user di server:', err);
+      }
+    }
+
+    function salinKodeAppsScript() {
+      triggerHaptic(25);
+      const code = document.getElementById('codeAppsScriptBlock').innerText;
+      const btn = document.getElementById('btnSalinScript');
+
+      const temp = document.createElement('textarea');
+      temp.value = code;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+
+      btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-leaf"></i><span>Tersalin!</span>`;
+      lucide.createIcons();
+      setTimeout(() => {
+        btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i><span>Salin Kode</span>`;
+        lucide.createIcons();
+      }, 2000);
+    }
 
     /* =====================================================================
        THEME CONTROLLER (DARK & LIGHT MODE)
@@ -1145,12 +1972,16 @@
        ===================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      initConfigGudang();
       applyViewModeLayout();
       lucide.createIcons();
       const sessionToko = sessionStorage.getItem('loginToko');
+      const sessionIsAdmin = sessionStorage.getItem('loginIsAdmin') === 'true';
+
       if (sessionToko) {
         namaTokoAktif = sessionToko;
-        bukaAplikasi(namaTokoAktif);
+        isAdmin = sessionIsAdmin;
+        bukaAplikasi(namaTokoAktif, isAdmin);
       }
 
       document.getElementById('inputJumlah').addEventListener('keydown', (e) => {
@@ -1261,10 +2092,21 @@
 
         if (res.success) {
           alertBox.classList.add('hidden');
-          namaTokoAktif = res.namaToko;
+          namaTokoAktif = res.namaToko || user;
+
+          // Deteksi hak akses admin dari username atau respons payload backend
+          isAdmin = (
+            user.toLowerCase() === 'admin' ||
+            (res.role && String(res.role).toLowerCase() === 'admin') ||
+            (res.isAdmin === true) ||
+            String(namaTokoAktif).toLowerCase().includes('admin')
+          );
+
           sessionStorage.setItem('loginToko', namaTokoAktif);
+          sessionStorage.setItem('loginIsAdmin', isAdmin ? 'true' : 'false');
+
           triggerHaptic(50);
-          bukaAplikasi(namaTokoAktif);
+          bukaAplikasi(namaTokoAktif, isAdmin);
         } else {
           alertBox.className = 'text-xs font-mono p-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 block';
           alertBox.innerText = res.message || 'Login gagal. Periksa username dan password.';
@@ -1280,7 +2122,8 @@
       }
     }
 
-    async function bukaAplikasi(namaToko) {
+    async function bukaAplikasi(namaToko, userIsAdmin = false) {
+      isAdmin = userIsAdmin;
       document.getElementById('pageLogin').classList.add('hidden');
       document.getElementById('pageMainApp').classList.remove('hidden');
       document.getElementById('labelNamaToko').innerText = namaToko;
@@ -1291,6 +2134,25 @@
       document.getElementById('headerStoreName').innerText = namaToko;
       document.getElementById('btnLogoutTop').classList.remove('hidden');
       document.getElementById('btnLogoutTop').classList.add('inline-flex');
+
+      // Tampilkan tombol admin jika pengguna berwenang
+      const btnAdminHeader = document.getElementById('btnAdminPanel');
+      const btnEditInfo = document.getElementById('btnEditInfoAdmin');
+      if (isAdmin) {
+        if (btnAdminHeader) {
+          btnAdminHeader.classList.remove('hidden');
+          btnAdminHeader.classList.add('inline-flex');
+        }
+        if (btnEditInfo) {
+          btnEditInfo.classList.remove('hidden');
+          btnEditInfo.classList.add('inline-flex');
+        }
+      } else {
+        if (btnAdminHeader) btnAdminHeader.classList.add('hidden');
+        if (btnEditInfo) btnEditInfo.classList.add('hidden');
+      }
+
+      renderPapanInfoGudang();
 
       const inputBarang = document.getElementById('inputBarang');
       inputBarang.disabled = true;
@@ -1322,7 +2184,9 @@
 
     function logout() {
       sessionStorage.removeItem('loginToko');
+      sessionStorage.removeItem('loginIsAdmin');
       namaTokoAktif = "";
+      isAdmin = false;
       keranjang = [];
       selectedItemObj = null;
       document.getElementById('loginUsername').value = "";
@@ -1331,6 +2195,11 @@
       document.getElementById('headerStoreBadge').classList.remove('inline-flex');
       document.getElementById('btnLogoutTop').classList.add('hidden');
       document.getElementById('btnLogoutTop').classList.remove('inline-flex');
+
+      const btnAdminHeader = document.getElementById('btnAdminPanel');
+      const btnEditInfo = document.getElementById('btnEditInfoAdmin');
+      if (btnAdminHeader) btnAdminHeader.classList.add('hidden');
+      if (btnEditInfo) btnEditInfo.classList.add('hidden');
 
       document.getElementById('pageMainApp').classList.add('hidden');
       document.getElementById('pageLogin').classList.remove('hidden');
@@ -1505,16 +2374,19 @@
        ===================================================================== */
     function hubungiAdminGudang(tipe = 'wa') {
       triggerHaptic(30);
+      const activeCfg = getConfigUntukToko(namaTokoAktif);
       const namaToko = namaTokoAktif || 'Toko Pelanggan';
+      const waNumber = activeCfg.nomorWaAdmin || NOMOR_ADMIN_GUDANG;
+      const telNumber = activeCfg.nomorTelAdmin || waNumber;
 
       if (tipe === 'tel') {
-        window.location.href = `tel:+${NOMOR_ADMIN_GUDANG}`;
+        window.location.href = `tel:+${telNumber}`;
         return;
       }
 
       // Format pesan ramah dan langsung mengidentifikasi nama toko pemesan
       const pesan = `Halo Admin Gudang Duta Abadi, saya dari *${namaToko}* ingin menanyakan perihal ketersediaan stok / pengiriman barang pesanan kami. Mohon bantuannya ya. Terima kasih!`;
-      const urlWA = `https://api.whatsapp.com/send?phone=${NOMOR_ADMIN_GUDANG}&text=${encodeURIComponent(pesan)}`;
+      const urlWA = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodeURIComponent(pesan)}`;
       window.open(urlWA, '_blank');
     }
 
