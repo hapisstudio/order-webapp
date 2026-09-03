@@ -321,10 +321,33 @@
 
     /* Print Format Khusus Printer MiniPOS 88mm / 80mm Thermal */
     @media print {
-      @page {
-        size: 80mm auto;
-        margin: 0;
-      }
+  /* Paksa tinggi halaman menjadi auto mengikuti konten */
+  @page {
+    size: 80mm auto !important;
+    margin: 0 !important;
+  }
+
+  html, body {
+    width: 80mm !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #printableReceipt {
+    display: block !important;
+    width: 76mm !important;
+    max-width: 76mm !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: 2mm 0 4mm 0 !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
       html, body {
         width: 80mm !important;
         margin: 0 !important;
