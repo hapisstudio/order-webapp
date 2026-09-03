@@ -1429,6 +1429,53 @@ function jsonResponse(obj) {
       }
     }
 
+    function bukaModalAdmin() {
+      triggerHaptic(20);
+      const modal = document.getElementById('modalAdminPanel');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      populasiTargetTokoDropdown();
+      switchAdminSubTab('papan');
+      lucide.createIcons();
+    }
+
+    function tutupModalAdmin() {
+      const modal = document.getElementById('modalAdminPanel');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchAdminSubTab(tab) {
+      triggerHaptic(15);
+      const subPapan = document.getElementById('subtabAdminPapan');
+      const subUser = document.getElementById('subtabAdminUser');
+      const subScript = document.getElementById('subtabAdminScript');
+
+      const btnPapan = document.getElementById('btnAdminTabPapan');
+      const btnUser = document.getElementById('btnAdminTabUser');
+      const btnScript = document.getElementById('btnAdminTabScript');
+
+      if (subPapan) subPapan.classList.toggle('hidden', tab !== 'papan');
+      if (subUser) subUser.classList.toggle('hidden', tab !== 'user');
+      if (subScript) subScript.classList.toggle('hidden', tab !== 'script');
+
+      const activeClass = "flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all bg-white text-ink shadow-sm flex items-center justify-center gap-1.5 tap-press";
+      const inactiveClass = "flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all text-soft hover:text-white flex items-center justify-center gap-1.5 tap-press";
+
+      if (btnPapan) btnPapan.className = tab === 'papan' ? activeClass : inactiveClass;
+      if (btnUser) btnUser.className = tab === 'user' ? activeClass : inactiveClass;
+      if (btnScript) btnScript.className = tab === 'script' ? activeClass : inactiveClass;
+
+      if (tab === 'user') {
+        if (!daftarUsersGlobal || daftarUsersGlobal.length === 0) {
+          muatUsersDariSpreadsheet();
+        } else {
+          renderDaftarUserAdmin();
+        }
+      }
+
+      lucide.createIcons();
+    }
+
     function populasiTargetTokoDropdown() {
       const select = document.getElementById('cfgTargetToko');
       if (!select) return;
