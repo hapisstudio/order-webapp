@@ -101,7 +101,6 @@
     }
     ::selection { background: #dd7bbb; color: #0b0d12; }
 
-    /* Hero Background Grid */
     .hero-grid {
       background-image:
         linear-gradient(var(--grid-line) 1px, transparent 1px),
@@ -112,7 +111,6 @@
       transition: background-image 0.3s ease;
     }
 
-    /* Glowing Effect */
     .glow-capture { position: relative; }
     .glowing-effect {
       pointer-events: none;
@@ -166,7 +164,6 @@
           #00000000 0deg, #fff, #00000000 calc(var(--spread) * 2deg));
     }
 
-    /* Liquid Glass Effect with Refined Subtle Blur */
     .liquid-glass {
       background: var(--glass-bg);
       backdrop-filter: blur(10px);
@@ -189,7 +186,6 @@
       pointer-events: none;
     }
 
-    /* Light Theme Typography & Surface Harmonization */
     html.light .text-white { color: var(--color-text-title); }
     html.light .text-zinc-100 { color: #1e293b; }
     html.light .text-zinc-200 { color: #334155; }
@@ -215,7 +211,6 @@
       color: #94a3b8 !important;
     }
 
-    /* Search dropdown glass with subtle frosted blur */
     #dropdownBarang {
       background: rgba(17, 20, 27, 0.82) !important;
       backdrop-filter: blur(14px) !important;
@@ -239,13 +234,8 @@
       color: #ffffff !important;
     }
 
-    /* Keep high-contrast text on gradient buttons */
-    #btnSubmitOrder {
-      color: #0b0d12 !important;
-    }
-    #btnSubmitOrder i, #btnSubmitOrder span {
-      color: #0b0d12 !important;
-    }
+    #btnSubmitOrder { color: #0b0d12 !important; }
+    #btnSubmitOrder i, #btnSubmitOrder span { color: #0b0d12 !important; }
 
     .gradient-text {
       background: linear-gradient(100deg, #dd7bbb 0%, #d79f1e 35%, #5a922c 65%, #4c7894 100%);
@@ -254,7 +244,6 @@
       color: transparent;
     }
 
-    /* Hide number input spinners */
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
       -webkit-appearance: none; 
@@ -262,17 +251,14 @@
     }
     input[type=number] { -moz-appearance: textfield; }
 
-    /* Hide standard scrollbars for sleek app look */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Touch active state for quick mobile tap feedback */
     .tap-press:active {
       transform: scale(0.97);
       transition: transform 0.1s ease;
     }
 
-    /* Smooth View Mode Morphing & Animations */
     #mainContainer {
       transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
                   padding 0.35s ease,
@@ -304,22 +290,6 @@
       100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
 
-    .animate-mode-switch {
-      animation: viewModeEnter 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes viewModeEnter {
-      0% {
-        opacity: 0.3;
-        transform: translateY(10px) scale(0.985);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    /* Print Format Khusus Printer MiniPOS 88mm / 80mm Thermal */
     @media print {
       @page {
         size: 80mm auto !important;
@@ -339,19 +309,10 @@
         print-color-adjust: exact;
       }
 
-      /* KRUSIAL: Hapus seluruh elemen halaman dari alur tata letak dengan display: none */
-      header, 
-      main, 
-      nav, 
-      footer, 
-      #modalScanner, 
-      #modalDetail, 
-      #modalKonfirmasiSelesai, 
-      #modalAdminPanel, 
-      #modalPreviewStruk,
-      #floatingCartPill, 
-      .hero-grid,
-      [class*="blur-"] {
+      header, main, nav, footer, 
+      #modalScanner, #modalDetail, #modalKonfirmasiSelesai, 
+      #modalAdminPanel, #modalPreviewStruk, #floatingCartPill, 
+      .hero-grid, [class*="blur-"] {
         display: none !important;
         visibility: hidden !important;
         height: 0 !important;
@@ -398,7 +359,6 @@
 
   <header class="sticky top-0 z-40 px-3 pt-2.5 pb-2 bg-ink/75 backdrop-blur-xl border-b border-line/60">
     <div class="max-w-md mx-auto flex items-center justify-between">
-      <!-- App Brand & Status -->
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-panel border border-line flex items-center justify-center shadow-inner">
           <span class="w-2.5 h-2.5 rounded-full bg-leaf animate-pulse"></span>
@@ -411,22 +371,18 @@
         </div>
       </div>
 
-      <!-- Top Actions (Store Badge, Theme Switch & Mode Switch) -->
       <div class="flex items-center gap-2">
-        <!-- Admin Panel Action Button (Visible for Admin) -->
         <button id="btnAdminPanel" onclick="bukaModalAdmin()" title="Kelola Info Gudang"
                 class="hidden items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gold/15 border border-gold/40 text-gold text-[11px] font-mono font-semibold hover:bg-gold/25 transition-all tap-press">
           <i data-lucide="settings" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Admin</span>
         </button>
 
-        <!-- Theme Switcher (Dark / Light) -->
         <button id="btnToggleTheme" onclick="toggleTheme()" title="Ganti Mode Terang / Gelap"
                 class="flex items-center justify-center w-8 h-8 rounded-xl bg-black/5 dark:bg-white/5 border border-line text-zinc-600 dark:text-zinc-300 hover:text-pink transition-all tap-press">
           <i id="themeIcon" data-lucide="moon" class="w-4 h-4 text-pink"></i>
         </button>
 
-        <!-- View Mode Switcher (Mobile vs Desktop) -->
         <button id="btnToggleViewMode" onclick="toggleViewMode()" title="Ganti Tampilan Mobile / Desktop"
                 class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-black/5 dark:bg-white/5 border border-line text-[11px] font-mono text-zinc-700 dark:text-zinc-300 hover:text-white hover:bg-white/10 transition-all tap-press">
           <i id="modeIcon" data-lucide="smartphone" class="w-3.5 h-3.5 text-pink"></i>
@@ -447,7 +403,7 @@
 
   <main id="mainContainer" class="relative z-10 flex-1 w-full max-w-md mx-auto px-3.5 pt-3 pb-32 transition-all duration-300">
 
-    <!-- Desktop Navigation Bar (Animated smooth transition) -->
+    <!-- Desktop Navigation Bar -->
     <div id="desktopTabBar" class="hidden mb-6 opacity-0 -translate-y-3">
       <div class="flex items-center justify-between p-1.5 rounded-2xl liquid-glass bg-panel/70 border border-line">
         <div class="flex items-center gap-2">
@@ -460,6 +416,11 @@
                   class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-display font-semibold transition-all text-soft hover:text-white tap-press">
             <i data-lucide="clock" class="w-4 h-4"></i>
             <span>Status & Resi</span>
+          </button>
+          <button id="desktopTabBtnStock" onclick="switchTab('stock')"
+                  class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-display font-semibold transition-all text-soft hover:text-white tap-press">
+            <i data-lucide="package-search" class="w-4 h-4"></i>
+            <span>Cek Stok</span>
           </button>
         </div>
         <div class="flex items-center gap-2 px-3 text-xs font-mono text-soft">
@@ -516,7 +477,7 @@
       </div>
     </section>
 
-    <!-- ==================== MOBILE AUTHENTICATED APP CONTAINER ==================== -->
+    <!-- ==================== AUTHENTICATED APP CONTAINER ==================== -->
     <div id="pageMainApp" class="hidden space-y-4">
 
       <!-- ==================== ORDER / KATALOG & DESKTOP SPLIT WRAPPER ==================== -->
@@ -524,7 +485,6 @@
         <!-- ==================== TAB 1: ORDER / KATALOG ==================== -->
         <section id="tabViewOrder" class="space-y-3.5">
 
-          <!-- Store Verified Card -->
           <div class="liquid-glass rounded-2xl p-3.5 bg-panel/60 border border-line flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-2.5 min-w-0">
               <div class="w-9 h-9 rounded-xl bg-pink/10 border border-pink/20 flex items-center justify-center text-pink shrink-0">
@@ -559,7 +519,7 @@
                 </label>
               </div>
 
-              <!-- Search Bar with Built-in Scan & Clear -->
+              <!-- Search Bar -->
               <div class="relative">
                 <div class="relative flex items-center">
                   <i data-lucide="search" class="w-4 h-4 text-soft absolute left-3.5 pointer-events-none"></i>
@@ -578,7 +538,6 @@
                   </div>
                 </div>
 
-                <!-- Dropdown Results -->
                 <div id="dropdownBarang"
                      class="hidden absolute top-full left-0 right-0 mt-2 z-50 max-h-72 overflow-y-auto no-scrollbar rounded-2xl liquid-glass border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7)] p-2 space-y-1">
                 </div>
@@ -597,7 +556,6 @@
                   </button>
                 </div>
 
-                <!-- Quantity Stepper Controls & Add Button -->
                 <div class="flex items-center gap-2">
                   <div class="flex items-center bg-ink border border-line rounded-2xl px-2 h-12 w-36 shrink-0 justify-between">
                     <button type="button" onclick="ubahQty(-1)" class="w-9 h-9 flex items-center justify-center text-soft hover:text-white text-lg font-mono font-bold tap-press select-none rounded-xl hover:bg-white/5">−</button>
@@ -617,9 +575,8 @@
             </div>
           </div>
 
-          <!-- ==================== WAREHOUSE INFO BOARD & CONTACT ADMIN ==================== -->
+          <!-- Warehouse Info Board & Order Metrics -->
           <div class="liquid-glass rounded-3xl p-4 bg-panel/40 border border-line space-y-3.5">
-            <!-- Header Status Operasional -->
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-1.5 min-w-0">
                 <span class="text-xs font-mono uppercase tracking-wider text-soft flex items-center gap-1.5 shrink-0">
@@ -643,8 +600,42 @@
               </div>
             </div>
 
-            <!-- Banner Pengumuman Khusus Toko (Bila Diatur Admin) -->
-            <div id="boxPengumumanKhusus" class="hidden p-3 rounded-2xl bg-pink/10 border border-pink/25 text-xs text-pink flex items-start gap-2.5">
+            <!-- Dashboard Order Metrics -->
+            <div class="pt-2 border-t border-line/40 mt-3">
+              <p class="text-[11px] font-mono uppercase tracking-wider text-soft mb-2">Status Pesanan Saya</p>
+              <div class="grid grid-cols-4 gap-2">
+                <div class="p-2 rounded-xl bg-white/[0.03] border border-white/5 text-center flex flex-col justify-center">
+                  <span class="block text-lg font-bold text-white mb-0.5" id="countPending">0</span>
+                  <span class="text-[9px] font-mono text-soft uppercase tracking-wider">Pending</span>
+                </div>
+                <div class="p-2 rounded-xl bg-sea/10 border border-sea/20 text-center flex flex-col justify-center">
+                  <span class="block text-lg font-bold text-sky-300 mb-0.5" id="countDiproses">0</span>
+                  <span class="text-[9px] font-mono text-sky-300/80 uppercase tracking-wider">Diproses</span>
+                </div>
+                <div class="p-2 rounded-xl bg-pink/10 border border-pink/20 text-center flex flex-col justify-center">
+                  <span class="block text-lg font-bold text-pink mb-0.5" id="countDikirim">0</span>
+                  <span class="text-[9px] font-mono text-pink/80 uppercase tracking-wider">Dikirim</span>
+                </div>
+                <div class="p-2 rounded-xl bg-leaf/10 border border-leaf/20 text-center flex flex-col justify-center">
+                  <span class="block text-lg font-bold text-leaf mb-0.5" id="countSelesai">0</span>
+                  <span class="text-[9px] font-mono text-leaf/80 uppercase tracking-wider">Selesai</span>
+                </div>
+              </div>
+
+              <!-- Peringatan Barang Dikirim -->
+              <div id="warningDikirim" class="hidden mt-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-2.5 text-amber-400">
+                <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 mt-0.5 text-amber-400"></i>
+                <div>
+                  <p class="text-[11px] font-bold">Pesanan Telah Tiba?</p>
+                  <p class="text-[10px] font-mono leading-relaxed mt-0.5 text-amber-300/80">
+                    Anda memiliki <strong id="warningCount" class="text-amber-300">0</strong> pesanan <b>DIKIRIM</b>. Segera konfirmasi terima pesanan di tab <b>Status & Resi</b> jika barang sudah sampai.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Banner Pengumuman Khusus Toko -->
+            <div id="boxPengumumanKhusus" class="hidden p-3 rounded-2xl bg-pink/10 border border-pink/25 text-xs text-pink flex items-start gap-2.5 mt-2">
               <i data-lucide="megaphone" class="w-4 h-4 shrink-0 mt-0.5 text-pink"></i>
               <div class="min-w-0 flex-1">
                 <p class="font-display font-bold text-white text-[11px]" id="labelJudulPengumuman">Pengumuman Khusus Toko</p>
@@ -652,8 +643,7 @@
               </div>
             </div>
 
-            <!-- Jam Operasional & Jadwal Pengiriman -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-3">
               <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
                 <div class="flex items-center gap-2 text-soft text-[11px] font-mono">
                   <i data-lucide="clock" class="w-3.5 h-3.5 text-sea"></i>
@@ -673,7 +663,6 @@
               </div>
             </div>
 
-            <!-- Catatan Pengemasan & Penerimaan -->
             <div class="p-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start gap-2.5 text-xs text-soft">
               <i data-lucide="shield-alert" class="w-4 h-4 text-pink shrink-0 mt-0.5"></i>
               <p id="labelCatatanGudang" class="text-[11px] leading-relaxed">
@@ -681,18 +670,15 @@
               </p>
             </div>
 
-            <!-- Tombol Pintasan Hubungi Admin Gudang -->
             <div class="pt-1 space-y-2">
               <p class="text-[11px] font-mono uppercase tracking-wider text-soft">Bantuan & Koordinasi</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <!-- Tombol WhatsApp Admin -->
                 <button type="button" onclick="hubungiAdminGudang('wa')"
                         class="py-3 px-3.5 rounded-2xl bg-leaf/15 hover:bg-leaf/25 border border-leaf/30 text-leaf font-display font-semibold text-xs transition-all flex items-center justify-center gap-2 tap-press">
                   <i data-lucide="message-circle" class="w-4 h-4"></i>
                   <span>WhatsApp Admin Gudang</span>
                 </button>
 
-                <!-- Tombol Telepon / Panggilan Cepat -->
                 <button type="button" onclick="hubungiAdminGudang('tel')"
                         class="py-3 px-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-semibold text-xs transition-all flex items-center justify-center gap-2 tap-press">
                   <i data-lucide="phone-call" class="w-4 h-4 text-sea"></i>
@@ -717,12 +703,8 @@
             </button>
           </div>
 
-          <!-- Cart Items List Container -->
-          <div id="bodyKeranjang" class="space-y-2.5">
-            <!-- Populated by JS -->
-          </div>
+          <div id="bodyKeranjang" class="space-y-2.5"></div>
 
-          <!-- Order Note -->
           <div class="liquid-glass rounded-2xl p-3.5 bg-panel/50 border border-line space-y-2">
             <label class="block text-xs font-mono uppercase tracking-wider text-soft flex items-center gap-1.5">
               <i data-lucide="message-square" class="w-3.5 h-3.5 text-gold"></i>
@@ -732,7 +714,6 @@
                       class="w-full bg-ink/80 border border-line rounded-xl p-3 text-xs text-white placeholder:text-soft/40 outline-none focus:border-pink transition-all resize-none"></textarea>
           </div>
 
-          <!-- Order Summary Card -->
           <div class="liquid-glass rounded-2xl p-4 bg-panel/70 border border-line space-y-3">
             <div class="flex items-center justify-between text-xs font-mono text-soft">
               <span>Ragam Produk</span>
@@ -771,7 +752,6 @@
 
         <div id="alertBoxRiwayat" class="hidden text-xs p-3 rounded-2xl border"></div>
 
-        <!-- Status Filter Pills (Horizontal Touch Carousel) -->
         <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 pt-0.5" id="filterStatus">
           <button data-filter="Semua" onclick="setFilter(this)"
                   class="filter-pill px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-white text-ink transition-all shrink-0 tap-press">Semua</button>
@@ -787,7 +767,6 @@
                   class="filter-pill px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-panel/70 border border-line text-soft transition-all shrink-0 tap-press">Batal</button>
         </div>
 
-        <!-- History List Container -->
         <div id="listHistori" class="space-y-3">
           <div class="text-center py-12 text-soft text-xs font-mono">
             <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2 opacity-50"></i>
@@ -797,8 +776,38 @@
 
       </section>
 
+      <!-- ==================== TAB 4: CEK STOK & HARGA ==================== -->
+      <section id="tabViewStock" class="hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-display font-bold text-xl text-white">Cek Ketersediaan Stok</h3>
+            <p class="text-xs text-soft">Cari stok, harga grosir/ritel, dan diskon barang</p>
+          </div>
+        </div>
+
+        <!-- Search Bar Cek Stok -->
+        <div class="glow-capture rounded-3xl relative z-30">
+          <div class="glowing-effect" data-glow><div class="glow"></div></div>
+          <div class="relative z-30 liquid-glass rounded-3xl p-4 bg-panel/90 border border-line space-y-3">
+            <div class="relative flex items-center">
+              <i data-lucide="search" class="w-4 h-4 text-soft absolute left-3.5"></i>
+              <input type="text" id="inputCekStok" autocomplete="off" oninput="renderHasilCekStok(this.value)"
+                     placeholder="Ketik nama atau SKU barang..."
+                     class="w-full bg-ink/90 border border-line rounded-2xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-soft/40 outline-none focus:border-pink transition-all font-body" />
+            </div>
+          </div>
+        </div>
+
+        <div id="listHasilCekStok" class="space-y-2.5">
+          <div class="text-center py-10 text-soft text-xs font-mono border border-line border-dashed rounded-3xl bg-white/[0.02]">
+             Ketik nama barang untuk melihat ketersediaan...
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
+  
   <!-- Floating Cart Pill & Bottom App Bar -->
   <div id="floatingCartPill" class="fixed bottom-[calc(env(safe-area-inset-bottom)+84px)] left-4 right-4 max-w-md mx-auto z-40 hidden">
     <div onclick="switchTab('cart')"
@@ -817,7 +826,7 @@
   </div>
 
   <nav id="bottomNavBar" class="fixed bottom-[calc(env(safe-area-inset-bottom)+14px)] left-4 right-4 max-w-md mx-auto z-40 p-1.5 rounded-3xl liquid-glass bg-panel/85 dark:bg-panel/75 backdrop-blur-2xl border border-white/15 dark:border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.35)] translate-y-0 opacity-100">
-    <div class="grid grid-cols-3 gap-1.5">
+    <div class="grid grid-cols-4 gap-1.5">
       <button id="navBtnOrder" onclick="switchTab('order')"
               class="flex flex-col items-center justify-center py-2 px-2 rounded-2xl bg-white/15 dark:bg-white/10 text-pink dark:text-pink font-semibold shadow-sm transition-all duration-200 tap-press">
         <i data-lucide="box" class="w-5 h-5 mb-0.5"></i>
@@ -835,6 +844,12 @@
               class="flex flex-col items-center justify-center py-2 px-2 rounded-2xl text-slate-500 dark:text-soft hover:text-white transition-all duration-200 tap-press">
         <i data-lucide="clock" class="w-5 h-5 mb-0.5"></i>
         <span class="text-[11px] font-medium leading-none">Riwayat</span>
+      </button>
+      
+      <button id="navBtnStock" onclick="switchTab('stock')"
+              class="flex flex-col items-center justify-center py-2 px-2 rounded-2xl text-slate-500 dark:text-soft hover:text-white transition-all duration-200 tap-press">
+        <i data-lucide="package-search" class="w-5 h-5 mb-0.5"></i>
+        <span class="text-[11px] font-medium leading-none">Stok</span>
       </button>
     </div>
   </nav>
@@ -947,12 +962,10 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL PREVIEW STRUK THERMAL (80mm/88mm) ==================== -->
   <div id="modalPreviewStruk" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="liquid-glass rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 bg-panel/95 border-t sm:border border-line w-full max-w-md shadow-2xl relative max-h-[92vh] flex flex-col space-y-3">
       <div class="w-12 h-1 bg-white/20 rounded-full mx-auto -mt-1 sm:hidden"></div>
 
-      <!-- Header Modal Preview -->
       <div class="flex items-center justify-between pb-2 border-b border-line">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-pink/15 border border-pink/30 flex items-center justify-center text-pink">
@@ -971,7 +984,6 @@
         </button>
       </div>
 
-      <!-- Tips Peringatan Driver 80x210mm -->
       <div class="p-2.5 rounded-xl bg-gold/10 border border-gold/25 flex items-start gap-2 text-[11px] font-mono text-amber-300">
         <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 mt-0.5 text-gold"></i>
         <p class="leading-tight">
@@ -979,15 +991,12 @@
         </p>
       </div>
 
-      <!-- Kertas Struk Simulasi Realistis -->
       <div class="overflow-y-auto no-scrollbar flex-1 bg-zinc-900/60 p-3 rounded-2xl border border-line flex justify-center">
         <div id="simulasiKertasThermal" 
              class="w-full max-w-[310px] bg-white text-black p-3.5 rounded-sm shadow-xl font-mono text-xs select-text border-t-4 border-dashed border-zinc-400">
-          <!-- Populated by JS -->
         </div>
       </div>
 
-      <!-- Footer Tombol Aksi -->
       <div class="pt-2 border-t border-line grid grid-cols-2 gap-2">
         <button onclick="tutupPreviewStruk()"
                 class="py-3 px-3 rounded-xl font-display font-semibold text-xs text-soft bg-white/5 hover:bg-white/10 transition-colors tap-press">
@@ -1002,12 +1011,11 @@
     </div>
   </div>
 
-  <!-- ==================== ADMIN CONFIGURATION MODAL ==================== -->
+  <!-- Admin Modal -->
   <div id="modalAdminPanel" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="liquid-glass rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 bg-panel/95 border-t sm:border border-line w-full max-w-2xl shadow-2xl relative max-h-[92vh] flex flex-col space-y-4">
       <div class="w-12 h-1 bg-white/20 rounded-full mx-auto -mt-1 sm:hidden"></div>
 
-      <!-- Header Modal & Status Sinkronisasi Spreadsheet -->
       <div class="flex items-center justify-between pb-3 border-b border-line">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-gold/15 border border-gold/30 flex items-center justify-center text-gold">
@@ -1029,7 +1037,6 @@
         </button>
       </div>
 
-      <!-- Tab Navigasi Admin: Papan Toko vs Manajemen User vs Script Backend -->
       <div class="flex p-1 rounded-xl bg-ink/70 border border-line gap-1">
         <button type="button" id="btnAdminTabPapan" onclick="switchAdminSubTab('papan')"
                 class="flex-1 py-2 px-3 rounded-lg text-xs font-display font-semibold transition-all bg-white text-ink shadow-sm flex items-center justify-center gap-1.5 tap-press">
@@ -1048,12 +1055,10 @@
         </button>
       </div>
 
-      <!-- Alert Notifikasi Modal Admin -->
       <div id="alertAdminPanel" class="hidden text-xs p-2.5 rounded-xl border font-mono"></div>
 
-      <!-- ==================== SUBTAB 1: PAPAN INFORMASI & JADWAL ==================== -->
+      <!-- Subtab 1: Papan Informasi -->
       <div id="subtabAdminPapan" class="overflow-y-auto no-scrollbar space-y-3.5 flex-1 pr-1">
-        <!-- Target Toko Selector -->
         <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
           <div class="flex items-center justify-between">
             <label class="text-[11px] font-mono uppercase tracking-wider text-gold flex items-center gap-1.5 font-bold">
@@ -1080,7 +1085,6 @@
         </div>
 
         <form id="formConfigPapan" onsubmit="event.preventDefault(); simpanConfigGudangKeSpreadsheet();" class="space-y-3">
-          <!-- Judul / Pengumuman Tambahan Khusus -->
           <div>
             <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">
               Pemberitahuan Khusus Toko Ini (Opsional)
@@ -1089,7 +1093,6 @@
                    class="w-full bg-ink/90 border border-line rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-gold" />
           </div>
 
-          <!-- Status Operasional -->
           <div>
             <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Status Operasional Gudang</label>
             <select id="cfgStatusOperasional"
@@ -1100,7 +1103,6 @@
             </select>
           </div>
 
-          <!-- Jam Buka & Hari Libur -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Jam Operasional</label>
@@ -1114,7 +1116,6 @@
             </div>
           </div>
 
-          <!-- Cut-off Pengiriman -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Batas Order (Cut-Off)</label>
@@ -1128,14 +1129,12 @@
             </div>
           </div>
 
-          <!-- Catatan / SOP Gudang -->
           <div>
             <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Catatan SOP / Pengumuman Toko</label>
             <textarea id="cfgCatatanGudang" rows="2" placeholder="Instruksi penerimaan barang..."
                       class="w-full bg-ink/90 border border-line rounded-xl p-2.5 text-xs text-white outline-none focus:border-gold resize-none"></textarea>
           </div>
 
-          <!-- Nomor Kontak Admin -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="block text-[11px] font-mono uppercase tracking-wider text-soft mb-1">Nomor WhatsApp Admin</label>
@@ -1165,9 +1164,8 @@
         </form>
       </div>
 
-      <!-- ==================== SUBTAB 2: MANAJEMEN AKUN TOKO (USERS) ==================== -->
+      <!-- Subtab 2: Manajemen User -->
       <div id="subtabAdminUser" class="hidden overflow-y-auto no-scrollbar space-y-3.5 flex-1 pr-1">
-        <!-- Form Tambah / Edit User -->
         <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
           <div class="flex items-center justify-between">
             <h4 id="formUserTitle" class="text-xs font-display font-bold text-white flex items-center gap-1.5">
@@ -1211,6 +1209,25 @@
               </div>
             </div>
 
+            <!-- Custom Hak Akses Grosir, Ritel & Diskon -->
+            <div class="p-3 rounded-xl bg-ink/50 border border-line">
+              <span class="block text-[10px] font-mono text-soft uppercase mb-2">Izin Akses Informasi (Khusus Role Toko)</span>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <label class="flex items-center gap-2 cursor-pointer text-xs text-white tap-press">
+                  <input type="checkbox" id="formUserIzinGrosir" class="rounded bg-ink border-line text-pink focus:ring-0 w-3.5 h-3.5" />
+                  <span>Harga Grosir</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-xs text-white tap-press">
+                  <input type="checkbox" id="formUserIzinRitel" class="rounded bg-ink border-line text-pink focus:ring-0 w-3.5 h-3.5" />
+                  <span>Harga Ritel</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-xs text-white tap-press">
+                  <input type="checkbox" id="formUserIzinDiskon" class="rounded bg-ink border-line text-pink focus:ring-0 w-3.5 h-3.5" />
+                  <span>Diskon %</span>
+                </label>
+              </div>
+            </div>
+
             <button type="submit" id="btnSubmitUser"
                     class="w-full py-2.5 rounded-xl font-display font-semibold text-xs text-ink bg-white hover:bg-pink transition-all flex items-center justify-center gap-1.5 tap-press shadow-sm">
               <i data-lucide="save" class="w-3.5 h-3.5"></i>
@@ -1219,7 +1236,6 @@
           </form>
         </div>
 
-        <!-- Daftar User Toko di Spreadsheet -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-mono text-soft uppercase tracking-wider flex items-center gap-1">
@@ -1241,7 +1257,7 @@
         </div>
       </div>
 
-      <!-- ==================== SUBTAB 3: PETUNJUK & KODE APPS SCRIPT ==================== -->
+      <!-- Subtab 3: Kode Apps Script -->
       <div id="subtabAdminScript" class="hidden overflow-y-auto no-scrollbar space-y-3 flex-1 pr-1">
         <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/10 space-y-1.5">
           <h4 class="text-xs font-display font-bold text-white flex items-center gap-1.5">
@@ -1249,7 +1265,7 @@
             <span>Sinkronisasi Google Spreadsheet</span>
           </h4>
           <p class="text-[11px] text-soft leading-relaxed">
-            Agar spreadsheet Anda otomatis memiliki sheet <code class="text-gold font-mono">Config</code> dan sheet <code class="text-pink font-mono">Users</code>, salin kode Apps Script di bawah ini ke <strong>Extensions > Apps Script</strong> di Google Sheets Anda, lalu klik <strong>Deploy > New deployment</strong> (Pilih Web App: <em>Anyone can access</em>).
+            Agar spreadsheet otomatis memiliki sheet <code class="text-gold font-mono">Config</code> dan <code class="text-pink font-mono">Users</code>, salin kode Apps Script di bawah ke <strong>Extensions > Apps Script</strong> di Google Sheets, lalu klik <strong>Deploy > New deployment</strong> (Web App: <em>Anyone can access</em>).
           </p>
         </div>
 
@@ -1309,6 +1325,298 @@ function doPost(e) {
 function jsonResponse(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
+
+function getSheetUsers(ss) {
+  let sheet = ss.getSheetByName('Users');
+  if (!sheet) {
+    sheet = ss.insertSheet('Users');
+    sheet.appendRow([
+      'Username', 'Password', 'Nama Toko', 'Role', 'Izin Grosir', 'Izin Ritel', 'Izin Diskon', 'Status', 'Dibuat Pada',
+      'Status Operasional', 'Judul Pengumuman', 'Jam Buka', 'Hari Libur', 'Cut-Off Jam', 'Cut-Off Deskripsi', 'Catatan Gudang', 'Nomor WA', 'Nomor Tel'
+    ]);
+    sheet.getRange("A1:R1").setBackground("#1e293b").setFontColor("white").setFontWeight("bold");
+    
+    const nowStr = new Date().toLocaleString('id-ID');
+    sheet.appendRow([
+      '__DEFAULT__', 'system', 'Aturan Default Global', 'system', false, false, false, 'Aktif', nowStr,
+      'normal', '', 'Senin - Sabtu: 08.00 - 17.00 WIB', 'Minggu & Hari Besar: Tutup', 'Maksimal Order Pukul 13.00 WIB', 'Order setelah jam 13.00 dikirim rute besok', 'Pastikan mencocokkan jumlah koli & surat jalan saat kurir tiba. Konfirmasi resi membutuhkan 6 digit kode dari kurir.', '6281234567890', '6281234567890'
+    ]);
+    sheet.appendRow(['admin', 'admin123', 'Admin Gudang', 'admin', true, true, true, 'Aktif', nowStr, '', '', '', '', '', '', '', '', '']);
+  }
+  return sheet;
+}
+
+function prosesLogin(username, password) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheetUsers = getSheetUsers(ss);
+    const data = sheetUsers.getDataRange().getValues();
+    const userClean = String(username).trim();
+    const passClean = String(password).trim();
+
+    for (let i = 1; i &lt; data.length; i++) {
+      const u = String(data[i][0]).trim();
+      const p = String(data[i][1]).trim();
+      const status = String(data[i][7] || 'Aktif').trim().toLowerCase();
+
+      if (u === userClean &amp;&amp; p === passClean) {
+        if (status !== 'aktif') return { success: false, message: 'Akun Anda dinonaktifkan.' };
+        const role = String(data[i][3] || (u.toLowerCase() === 'admin' ? 'admin' : 'user')).toLowerCase();
+        
+        return { 
+          success: true, 
+          namaToko: data[i][2] || u,
+          role: role,
+          isAdmin: role === 'admin',
+          izinGrosir: String(data[i][4]).toLowerCase() === 'true' || data[i][4] === true,
+          izinRitel: String(data[i][5]).toLowerCase() === 'true' || data[i][5] === true,
+          izinDiskon: String(data[i][6]).toLowerCase() === 'true' || data[i][6] === true
+        };
+      }
+    }
+    return { success: false, message: 'Username atau Password salah!' };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function handleGetUsers() {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getSheetUsers(ss);
+    const data = sheet.getDataRange().getValues();
+    const list = [];
+    for (let i = 1; i &lt; data.length; i++) {
+      const username = String(data[i][0]).trim();
+      if (!username) continue; 
+      
+      list.push({
+        username: username, password: String(data[i][1]), namaToko: String(data[i][2]), role: String(data[i][3] || 'user'),
+        izinGrosir: String(data[i][4]).toLowerCase() === 'true' || data[i][4] === true,
+        izinRitel: String(data[i][5]).toLowerCase() === 'true' || data[i][5] === true,
+        izinDiskon: String(data[i][6]).toLowerCase() === 'true' || data[i][6] === true,
+        status: String(data[i][7] || 'Aktif'),
+        statusOperasional: String(data[i][9] || ''), judulPengumuman: String(data[i][10] || ''), jamBuka: String(data[i][11] || ''),
+        hariLibur: String(data[i][12] || ''), cutOffJam: String(data[i][13] || ''), cutOffDesc: String(data[i][14] || ''),
+        catatanGudang: String(data[i][15] || ''), nomorWaAdmin: String(data[i][16] || ''), nomorTelAdmin: String(data[i][17] || '')
+      });
+    }
+    return { success: true, data: list };
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function handleSaveUser(user, mode, originalUsername) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getSheetUsers(ss);
+    const data = sheet.getDataRange().getValues();
+    const nowStr = new Date().toLocaleString('id-ID');
+    const targetUser = mode === 'edit' &amp;&amp; originalUsername ? originalUsername : user.username;
+    let foundRow = -1;
+
+    for (let i = 1; i &lt; data.length; i++) {
+      if (String(data[i][0]).trim().toLowerCase() === String(targetUser).trim().toLowerCase()) { foundRow = i + 1; break; }
+    }
+
+    const rowData = [user.username, user.password, user.namaToko, user.role || 'user', user.izinGrosir || false, user.izinRitel || false, user.izinDiskon || false, user.status || 'Aktif'];
+
+    if (foundRow !== -1) {
+      sheet.getRange(foundRow, 1, 1, 8).setValues([rowData]);
+      return { success: true, message: 'Akun berhasil diperbarui!' };
+    } else {
+      sheet.appendRow([...rowData, nowStr, '', '', '', '', '', '', '', '', '']);
+      return { success: true, message: 'Akun baru ditambahkan!' };
+    }
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function handleDeleteUser(username) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getSheetUsers(ss);
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i &lt; data.length; i++) {
+      if (String(data[i][0]).trim().toLowerCase() === String(username).trim().toLowerCase()) {
+        sheet.deleteRow(i + 1); return { success: true, message: `Akun dihapus.` };
+      }
+    }
+    return { success: false, message: 'Akun tidak ditemukan.' };
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function handleGetAllConfig() {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getSheetUsers(ss);
+    const data = sheet.getDataRange().getValues();
+    const configMap = {};
+
+    for (let i = 1; i &lt; data.length; i++) {
+      const username = String(data[i][0]).trim();
+      const namaToko = String(data[i][2]).trim();
+      if (!username) continue;
+
+      const key = (username === '__DEFAULT__') ? '__DEFAULT__' : (namaToko || username);
+      configMap[key] = {
+        statusOperasional: String(data[i][9] || ''), judulPengumuman: String(data[i][10] || ''), jamBuka: String(data[i][11] || ''),
+        hariLibur: String(data[i][12] || ''), cutOffJam: String(data[i][13] || ''), cutOffDesc: String(data[i][14] || ''),
+        catatanGudang: String(data[i][15] || ''), nomorWaAdmin: String(data[i][16] || ''), nomorTelAdmin: String(data[i][17] || '')
+      };
+    }
+    return { success: true, data: configMap };
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function handleGetConfig(toko) {
+  try {
+    const resAll = handleGetAllConfig();
+    if (!resAll.success) return resAll;
+    const all = resAll.data;
+    const defaultCfg = all['__DEFAULT__'] || {};
+    if (toko &amp;&amp; all[toko]) return { success: true, data: Object.assign({}, defaultCfg, all[toko]), isCustom: true };
+    return { success: true, data: defaultCfg, isCustom: false };
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function handleSaveConfig(targetToko, config) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getSheetUsers(ss);
+    const data = sheet.getDataRange().getValues();
+    const targetClean = String(targetToko || '__DEFAULT__').trim().toLowerCase();
+    
+    let foundRow = -1;
+    for (let i = 1; i &lt; data.length; i++) { 
+      if (String(data[i][2]).trim().toLowerCase() === targetClean || String(data[i][0]).trim().toLowerCase() === targetClean) { 
+        foundRow = i + 1; break; 
+      } 
+    }
+    
+    if (foundRow !== -1) {
+      const rowData = [
+        config.statusOperasional || 'normal', config.judulPengumuman || '', config.jamBuka || '', config.hariLibur || '', 
+        config.cutOffJam || '', config.cutOffDesc || '', config.catatanGudang || '', config.nomorWaAdmin || '', config.nomorTelAdmin || ''
+      ];
+      sheet.getRange(foundRow, 10, 1, 9).setValues([rowData]); 
+      return { success: true, message: `Disimpan` }; 
+    } 
+    return { success: false, message: 'User/Toko tidak ditemukan!' };
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function handleDeleteConfig(targetToko) {
+  try {
+    if (targetToko === '__DEFAULT__') return { success: false, message: 'Tidak dapat dihapus!' };
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getSheetUsers(ss);
+    const data = sheet.getDataRange().getValues();
+    const targetClean = String(targetToko).trim().toLowerCase();
+    for (let i = 1; i &lt; data.length; i++) { 
+      if (String(data[i][2]).trim().toLowerCase() === targetClean || String(data[i][0]).trim().toLowerCase() === targetClean) { 
+        const empty = [['', '', '', '', '', '', '', '', '']];
+        sheet.getRange(i + 1, 10, 1, 9).setValues(empty); 
+        return { success: true, message: `Di-reset ke default.` }; 
+      } 
+    }
+    return { success: false, message: 'User tidak ditemukan.' };
+  } catch (err) { return { success: false, message: err.message }; }
+}
+
+function getDaftarBarang() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName('Data Stok DA'); 
+  if (!sheet) return [];
+  const data = sheet.getDataRange().getValues();
+  if (data.length &lt; 2) return [];
+
+  const headers = data[0].map(h =&gt; String(h).toLowerCase().trim());
+  const idxId = headers.indexOf("itemid"); 
+  const idxNama = headers.indexOf("itemname"); 
+  const idxStok = headers.indexOf("goodqty"); 
+  const idxGrosir = headers.indexOf("whprice"); 
+  const idxRitel = headers.indexOf("ritailprice"); 
+  const idxDiskon = headers.indexOf("maxdisc"); 
+  const idxBarcode = headers.indexOf("barcode");
+
+  const items = [];
+  function bersihkanAngka(val) { if (!val &amp;&amp; val !== 0) return 0; const num = Number(String(val).replace(/[^0-9.-]+/g, "")); return isNaN(num) ? 0 : num; }
+  
+  for (let i = 1; i &lt; data.length; i++) {
+    const row = data[i];
+    const idVal = idxId !== -1 ? String(row[idxId]) : String(row[0]);
+    const namaVal = idxNama !== -1 ? String(row[idxNama]) : String(row[1]);
+    if (!idVal &amp;&amp; !namaVal) continue; 
+    
+    items.push({ 
+      id: idVal, nama: namaVal, barcode: idxBarcode !== -1 ? String(row[idxBarcode]) : idVal, 
+      stok: idxStok !== -1 ? bersihkanAngka(row[idxStok]) : bersihkanAngka(row[2]), 
+      hargaGrosir: idxGrosir !== -1 ? bersihkanAngka(row[idxGrosir]) : bersihkanAngka(row[5]), 
+      hargaRitel: idxRitel !== -1 ? bersihkanAngka(row[idxRitel]) : bersihkanAngka(row[4]), 
+      diskon: idxDiskon !== -1 ? bersihkanAngka(row[idxDiskon]) : bersihkanAngka(row[6]) 
+    });
+  }
+  return items;
+}
+
+function simpanPesanan(orderData) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const namaSheetToko = orderData.namaToko;
+    let sheetToko = ss.getSheetByName(namaSheetToko);
+    if (!sheetToko) { 
+      sheetToko = ss.insertSheet(namaSheetToko); 
+      sheetToko.appendRow(['ID Pesanan', 'Tanggal', 'Nama Toko', 'ID Barang', 'Nama Barang', 'Jumlah', 'Status', 'Catatan', 'Kode Verifikasi']); 
+      sheetToko.getRange("A1:I1").setBackground("#4f46e5").setFontColor("white").setFontWeight("bold"); 
+      const ruleStatus = SpreadsheetApp.newDataValidation().requireValueInList(['Pending', 'Diproses', 'Dikirim', 'Selesai', 'Dibatalkan'], true).setAllowInvalid(false).build();
+      sheetToko.getRange("G2:G1000").setDataValidation(ruleStatus);
+    }
+    const now = new Date(); 
+    const idPesanan = `ORD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getFullYear()).slice(-2)}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+    const tanggal = now.toLocaleString('id-ID'); 
+    const kodeUnikKurir = String(Math.floor(100000 + Math.random() * 900000));
+    
+    const dataUntukDisimpan = orderData.keranjang.map(item =&gt; [ idPesanan, tanggal, orderData.namaToko, item.idBarang, item.namaBarang, Number(item.jumlah), 'Pending', orderData.catatan || '-', kodeUnikKurir ]);
+    if (dataUntukDisimpan.length &gt; 0) { sheetToko.getRange(sheetToko.getLastRow() + 1, 1, dataUntukDisimpan.length, dataUntukDisimpan[0].length).setValues(dataUntukDisimpan); }
+    return { success: true, message: 'Pesanan dikirim!', idPesanan: idPesanan };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function getRiwayatToko(namaToko) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheetToko = ss.getSheetByName(namaToko);
+    if (!sheetToko) return { success: true, data: [] };
+
+    const data = sheetToko.getDataRange().getValues();
+    let orderMap = {};
+    for (let i = 1; i &lt; data.length; i++) {
+      let id = data[i][0];
+      if (!id) continue;
+      if (!orderMap[id]) orderMap[id] = { idPesanan: id, tanggal: data[i][1], status: data[i][6] || 'Pending', catatan: data[i][7] || '-', totalItem: 0, totalQty: 0, items: [] };
+      orderMap[id].totalItem += 1;
+      orderMap[id].totalQty += Number(data[i][5]);
+      orderMap[id].items.push({ idBarang: data[i][3], namaBarang: data[i][4], jumlah: data[i][5] });
+    }
+    return { success: true, data: Object.values(orderMap).reverse() };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function updateStatusSelesai(idPesanan, namaToko, kodeUnik) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheetToko = ss.getSheetByName(namaToko);
+    if (!sheetToko) throw new Error("Sheet toko tidak ditemukan.");
+    const data = sheetToko.getDataRange().getValues();
+    let kodeValid = false;
+    for (let i = 1; i &lt; data.length; i++) {
+      if (data[i][0] === idPesanan) {
+        if (String(data[i][8] || "").trim() === String(kodeUnik).trim()) { kodeValid = true; break; } 
+        else { return { success: false, message: 'Kode verifikasi tidak cocok!' }; }
+      }
+    }
+    if (!kodeValid) return { success: false, message: 'Pesanan tidak ditemukan.' };
+    for (let i = 1; i &lt; data.length; i++) { if (data[i][0] === idPesanan) { sheetToko.getRange(i + 1, 7).setValue('Selesai'); } }
+    return { success: true, message: 'Berhasil' };
+  } catch (error) { return { success: false, message: error.message }; }
+}
           </pre>
         </div>
       </div>
@@ -1316,7 +1624,6 @@ function jsonResponse(obj) {
     </div>
   </div>
 
-  <!-- Hidden Printable Receipt Container -->
   <div id="printableReceipt" class="hidden text-black bg-white"></div>
 
   <script>
@@ -1324,10 +1631,10 @@ function jsonResponse(obj) {
        CONFIG & APPLICATION STATE
        ===================================================================== */
     const API_URL = "https://script.google.com/macros/s/AKfycbz0_yJK_GuYKFezG0UleR6usXt6tjsCbvd2Xg5VHrxXmeh8kJgfcZf57Y4KeLqZ6uT75g/exec";
-    const NOMOR_ADMIN_GUDANG = "6281234567890"; // Nomor WhatsApp default
+    const NOMOR_ADMIN_GUDANG = "6281234567890";
 
     let currentTheme = 'dark';
-    let viewMode = 'mobile'; // Default to mobile as requested
+    let viewMode = 'mobile';
     let namaTokoAktif = "";
     let isAdmin = false;
     let dataRiwayatGlobal = [];
@@ -1341,7 +1648,10 @@ function jsonResponse(obj) {
     let ketikTimer = null;
     let activeTab = 'order';
 
-    // Konfigurasi Default & Penyimpanan Multi-Toko dari Spreadsheet
+    let userIzinGrosir = false;
+    let userIzinRitel = false;
+    let userIzinDiskon = false;
+
     const DEFAULT_CONFIG_GUDANG = {
       statusOperasional: 'normal',
       jamBuka: 'Senin - Sabtu: 08.00 - 17.00 WIB',
@@ -1354,109 +1664,211 @@ function jsonResponse(obj) {
       judulPengumuman: ''
     };
 
-    // Objek penyimpan seluruh config: key '__DEFAULT__' untuk umum, dan key [namaToko] untuk per-toko
-    let multiConfigGudang = {
-      '__DEFAULT__': { ...DEFAULT_CONFIG_GUDANG }
-    };
-
-    // Daftar akun user / toko tersimpan (tersinkronisasi dengan Spreadsheet)
+    let multiConfigGudang = {};
     let daftarUsersGlobal = [];
     let targetTokoAdminTerpilih = '__DEFAULT__';
 
-    async function initConfigGudang() {
-      // 1. Baca cache lokal dulu agar UI langsung tampil cepat tanpa jeda putih
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      if (localStorage.getItem('loginToko')) {
+        namaTokoAktif = localStorage.getItem('loginToko');
+        isAdmin = localStorage.getItem('loginIsAdmin') === 'true';
+        userIzinGrosir = localStorage.getItem('loginIzinGrosir') === 'true';
+        userIzinRitel = localStorage.getItem('loginIzinRitel') === 'true';
+        userIzinDiskon = localStorage.getItem('loginIzinDiskon') === 'true';
+        bukaAplikasi(namaTokoAktif, isAdmin);
+      }
+    });
+
+    async function prosesLogin() {
+      const user = document.getElementById('loginUsername').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      const btn = document.getElementById('btnLogin');
+      const alertBox = document.getElementById('alertBoxLogin');
+
+      if (!user || !pass) {
+        alertBox.className = 'text-xs font-mono p-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 block';
+        alertBox.innerText = 'Username dan Password wajib diisi!';
+        alertBox.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-2">◌</span> Memverifikasi...`;
+
       try {
-        const cachedMulti = localStorage.getItem('duta_abadi_multi_config');
-        if (cachedMulti) {
-          multiConfigGudang = { ...multiConfigGudang, ...JSON.parse(cachedMulti) };
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'login', username: user, password: pass }),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        });
+        const res = await response.json();
+
+        btn.disabled = false;
+        btn.innerHTML = `<span>Masuk Sekarang</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+
+        if (res.success) {
+          alertBox.classList.add('hidden');
+          namaTokoAktif = res.namaToko || user;
+
+          isAdmin = res.isAdmin === true || user.toLowerCase() === 'admin';
+          userIzinGrosir = !!res.izinGrosir;
+          userIzinRitel = !!res.izinRitel;
+          userIzinDiskon = !!res.izinDiskon;
+
+          localStorage.setItem('loginToko', namaTokoAktif);
+          localStorage.setItem('loginIsAdmin', isAdmin ? 'true' : 'false');
+          localStorage.setItem('loginIzinGrosir', userIzinGrosir ? 'true' : 'false');
+          localStorage.setItem('loginIzinRitel', userIzinRitel ? 'true' : 'false');
+          localStorage.setItem('loginIzinDiskon', userIzinDiskon ? 'true' : 'false');
+
+          triggerHaptic(50);
+          bukaAplikasi(namaTokoAktif, isAdmin);
+        } else {
+          alertBox.className = 'text-xs font-mono p-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 block';
+          alertBox.innerText = res.message || 'Login gagal. Periksa username dan password.';
+          alertBox.classList.remove('hidden');
         }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Masuk Sekarang</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+        alertBox.className = 'text-xs font-mono p-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 block';
+        alertBox.innerText = 'Gagal terhubung ke endpoint Apps Script.';
+        alertBox.classList.remove('hidden');
+      }
+    }
+
+    async function bukaAplikasi(namaToko, userIsAdmin = false) {
+      isAdmin = userIsAdmin;
+      document.getElementById('pageLogin').classList.add('hidden');
+      document.getElementById('pageMainApp').classList.remove('hidden');
+      document.getElementById('labelNamaToko').innerText = namaToko;
+
+      const badgeHeader = document.getElementById('headerStoreBadge');
+      badgeHeader.classList.remove('hidden');
+      badgeHeader.classList.add('inline-flex');
+      document.getElementById('headerStoreName').innerText = namaToko;
+      document.getElementById('btnLogoutTop').classList.remove('hidden');
+      document.getElementById('btnLogoutTop').classList.add('inline-flex');
+
+      const btnAdminHeader = document.getElementById('btnAdminPanel');
+      if (isAdmin) {
+        if (btnAdminHeader) {
+          btnAdminHeader.classList.remove('hidden');
+          btnAdminHeader.classList.add('inline-flex');
+        }
+      } else {
+        if (btnAdminHeader) btnAdminHeader.classList.add('hidden');
+      }
+
+      // Ambil Config lokal / server
+      try {
         const cachedUsers = localStorage.getItem('duta_abadi_cached_users');
         if (cachedUsers) {
           daftarUsersGlobal = JSON.parse(cachedUsers);
-        }
-      } catch (e) {
-        console.warn('Gagal membaca cache lokal:', e);
-      }
-
-      renderPapanInfoGudang();
-
-      // 2. Ambil data konfigurasi & user mutakhir dari Google Spreadsheet
-      await sinkronisasiConfigDariSpreadsheet();
-      // Pastikan data user juga ditarik agar target dropdown langsung lengkap
-      muatUsersDariSpreadsheetSiluman();
-    }
-
-    async function muatUsersDariSpreadsheetSiluman() {
-      try {
-        const response = await fetch(`${API_URL}?action=getUsers`, { method: 'GET' });
-        const res = await response.json();
-        if (res.success && res.data) {
-          daftarUsersGlobal = res.data;
-          localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
-          populasiTargetTokoDropdown();
-        }
-      } catch (e) {
-        // Abaikan jika offline
-      }
-    }
-
-    async function sinkronisasiConfigDariSpreadsheet() {
-      const badge = document.getElementById('syncBadgeSpreadsheet');
-      try {
-        const response = await fetch(`${API_URL}?action=getAllConfig`, { method: 'GET' });
-        const res = await response.json();
-        if (res.success && res.data) {
-          multiConfigGudang = { ...multiConfigGudang, ...res.data };
-          localStorage.setItem('duta_abadi_multi_config', JSON.stringify(multiConfigGudang));
-          if (badge) {
-            badge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-leaf/15 border border-leaf/30 text-leaf flex items-center gap-1";
-            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-leaf"></span><span>Sheets Live</span>`;
-          }
+          buildMultiConfig();
           renderPapanInfoGudang();
-          populasiTargetTokoDropdown();
+        }
+        
+        // Background fetch Config & Users
+        fetch(`${API_URL}?action=getUsers`).then(r => r.json()).then(res => {
+          if (res.success) {
+            daftarUsersGlobal = res.data;
+            localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+            buildMultiConfig();
+            renderPapanInfoGudang();
+          }
+        });
+      } catch (e) {}
+
+      const inputBarang = document.getElementById('inputBarang');
+      inputBarang.disabled = true;
+      inputBarang.placeholder = "Mengambil data inventori... ⏳";
+
+      try {
+        const response = await fetch(`${API_URL}?action=getBarang`);
+        const res = await response.json();
+        if (res.success) {
+          daftarBarangGlobal = res.data;
+          inputBarang.disabled = false;
+          inputBarang.placeholder = "Cari nama barang atau ID... 🔍";
+        } else {
+          inputBarang.placeholder = "Gagal memuat barang: " + (res.message || '');
         }
       } catch (err) {
-        console.warn('Gagal menarik config dari Spreadsheet, menggunakan cache:', err);
-        if (badge) {
-          badge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/30 text-gold flex items-center gap-1";
-          badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-gold"></span><span>Offline Cache</span>`;
-        }
+        console.error(err);
+        inputBarang.placeholder = "Gagal memuat katalog barang.";
       }
+
+      try {
+        const savedCart = localStorage.getItem('keranjang_tersimpan');
+        if (savedCart) {
+          keranjang = JSON.parse(savedCart);
+          renderKeranjang();
+        }
+      } catch (e) {}
+
+      fetchRiwayatBackground();
+      lucide.createIcons();
+      switchTab('order');
     }
 
-    /* Pencarian Konfigurasi Toko Cerdas (Case-Insensitive & Username Matching) */
+    function buildMultiConfig() {
+      multiConfigGudang = { '__DEFAULT__': { ...DEFAULT_CONFIG_GUDANG } };
+      daftarUsersGlobal.forEach(u => {
+        const key = (u.username === '__DEFAULT__') ? '__DEFAULT__' : (u.namaToko || u.username);
+        multiConfigGudang[key] = {
+           statusOperasional: u.statusOperasional,
+           judulPengumuman: u.judulPengumuman,
+           jamBuka: u.jamBuka,
+           hariLibur: u.hariLibur,
+           cutOffJam: u.cutOffJam,
+           cutOffDesc: u.cutOffDesc,
+           catatanGudang: u.catatanGudang,
+           nomorWaAdmin: u.nomorWaAdmin,
+           nomorTelAdmin: u.nomorTelAdmin
+        };
+      });
+    }
+
     function getConfigUntukToko(namaToko) {
-      if (!namaToko) {
-        return { ...(multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG), isCustom: false };
-      }
-
       const cleanToko = String(namaToko).trim().toLowerCase();
+      let cfg = null;
 
-      // 1. Cocokkan langsung key nama toko
-      for (const [key, cfg] of Object.entries(multiConfigGudang)) {
-        if (key !== '__DEFAULT__' && key.trim().toLowerCase() === cleanToko) {
-          return { ...multiConfigGudang['__DEFAULT__'], ...cfg, isCustom: true, targetKey: key };
+      for (const [key, val] of Object.entries(multiConfigGudang)) {
+        if (key.toLowerCase() === cleanToko) {
+          cfg = val; break;
         }
       }
 
-      // 2. Cocokkan bila key berupa username dari akun toko tersebut
-      const foundUser = daftarUsersGlobal.find(u => 
-        (u.namaToko && u.namaToko.trim().toLowerCase() === cleanToko) ||
-        (u.username && u.username.trim().toLowerCase() === cleanToko)
-      );
-
-      if (foundUser) {
-        const altKey1 = foundUser.namaToko;
-        const altKey2 = foundUser.username;
-        if (altKey1 && multiConfigGudang[altKey1]) {
-          return { ...multiConfigGudang['__DEFAULT__'], ...multiConfigGudang[altKey1], isCustom: true, targetKey: altKey1 };
-        }
-        if (altKey2 && multiConfigGudang[altKey2]) {
-          return { ...multiConfigGudang['__DEFAULT__'], ...multiConfigGudang[altKey2], isCustom: true, targetKey: altKey2 };
+      if (!cfg) {
+        const foundUser = daftarUsersGlobal.find(u => 
+          (u.namaToko && u.namaToko.trim().toLowerCase() === cleanToko) ||
+          (u.username && u.username.trim().toLowerCase() === cleanToko)
+        );
+        if (foundUser) {
+          cfg = multiConfigGudang[foundUser.namaToko] || multiConfigGudang[foundUser.username];
         }
       }
 
-      return { ...(multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG), isCustom: false };
+      const finalCfg = { ...DEFAULT_CONFIG_GUDANG };
+      if (cfg && (cfg.statusOperasional || cfg.jamBuka || cfg.judulPengumuman)) {
+        if(cfg.statusOperasional) finalCfg.statusOperasional = cfg.statusOperasional;
+        if(cfg.judulPengumuman) finalCfg.judulPengumuman = cfg.judulPengumuman;
+        if(cfg.jamBuka) finalCfg.jamBuka = cfg.jamBuka;
+        if(cfg.hariLibur) finalCfg.hariLibur = cfg.hariLibur;
+        if(cfg.cutOffJam) finalCfg.cutOffJam = cfg.cutOffJam;
+        if(cfg.cutOffDesc) finalCfg.cutOffDesc = cfg.cutOffDesc;
+        if(cfg.catatanGudang) finalCfg.catatanGudang = cfg.catatanGudang;
+        if(cfg.nomorWaAdmin) finalCfg.nomorWaAdmin = cfg.nomorWaAdmin;
+        if(cfg.nomorTelAdmin) finalCfg.nomorTelAdmin = cfg.nomorTelAdmin;
+        finalCfg.isCustom = true;
+      } else {
+        finalCfg.isCustom = false;
+      }
+      return finalCfg;
     }
 
     function renderPapanInfoGudang() {
@@ -1479,7 +1891,6 @@ function jsonResponse(obj) {
       if (labelCutOffDesc) labelCutOffDesc.innerText = activeCfg.cutOffDesc;
       if (labelCatatan) labelCatatan.innerText = activeCfg.catatanGudang;
 
-      // Tampilkan Badge khusus jika toko ini memiliki jadwal tersendiri
       if (badgeKhusus) {
         if (activeCfg.isCustom && namaTokoAktif && !isAdmin) {
           badgeKhusus.classList.remove('hidden');
@@ -1489,7 +1900,6 @@ function jsonResponse(obj) {
         }
       }
 
-      // Tampilkan Banner pengumuman tambahan jika admin mengaturnya
       if (boxPengumuman && labelJudulPengumuman) {
         if (activeCfg.judulPengumuman && activeCfg.judulPengumuman.trim()) {
           boxPengumuman.classList.remove('hidden');
@@ -1515,6 +1925,81 @@ function jsonResponse(obj) {
           badgeContainer.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span><span>Operasional Normal</span>`;
         }
       }
+    }
+
+    /* =====================================================================
+       ORDER & DASHBOARD DATA FETCHING
+       ===================================================================== */
+    function updateDashboardCounts() {
+      let countP = 0, countPr = 0, countK = 0, countS = 0;
+      dataRiwayatGlobal.forEach(order => {
+        const status = String(order.status).toLowerCase();
+        if (status.includes('pending')) countP++;
+        else if (status.includes('proses')) countPr++;
+        else if (status.includes('kirim')) countK++;
+        else if (status.includes('selesai')) countS++;
+      });
+
+      document.getElementById('countPending').innerText = countP;
+      document.getElementById('countDiproses').innerText = countPr;
+      document.getElementById('countDikirim').innerText = countK;
+      document.getElementById('countSelesai').innerText = countS;
+
+      const warningBanner = document.getElementById('warningDikirim');
+      const warningCount = document.getElementById('warningCount');
+      if (countK > 0) {
+        warningCount.innerText = countK;
+        warningBanner.classList.remove('hidden');
+      } else {
+        warningBanner.classList.add('hidden');
+      }
+    }
+
+    async function fetchRiwayatBackground() {
+      try {
+        const response = await fetch(`${API_URL}?action=getRiwayat&namaToko=${encodeURIComponent(namaTokoAktif)}`);
+        const res = await response.json();
+        if (res.success) {
+          dataRiwayatGlobal = res.data;
+          updateDashboardCounts();
+        }
+      } catch(e) {}
+    }
+
+    function konfirmasiLogout() {
+      if (window.confirm("Keluar dari sesi toko " + namaTokoAktif + "?")) {
+        logout();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('loginToko');
+      localStorage.removeItem('loginIsAdmin');
+      localStorage.removeItem('loginIzinGrosir');
+      localStorage.removeItem('loginIzinRitel');
+      localStorage.removeItem('loginIzinDiskon');
+      localStorage.removeItem('keranjang_tersimpan');
+      
+      namaTokoAktif = "";
+      isAdmin = false;
+      userIzinGrosir = false;
+      userIzinRitel = false;
+      userIzinDiskon = false;
+      keranjang = [];
+      selectedItemObj = null;
+      document.getElementById('loginUsername').value = "";
+      document.getElementById('loginPassword').value = "";
+      document.getElementById('headerStoreBadge').classList.add('hidden');
+      document.getElementById('headerStoreBadge').classList.remove('inline-flex');
+      document.getElementById('btnLogoutTop').classList.add('hidden');
+      document.getElementById('btnLogoutTop').classList.remove('inline-flex');
+
+      const btnAdminHeader = document.getElementById('btnAdminPanel');
+      if (btnAdminHeader) btnAdminHeader.classList.add('hidden');
+
+      document.getElementById('pageMainApp').classList.add('hidden');
+      document.getElementById('pageLogin').classList.remove('hidden');
+      renderKeranjang();
     }
 
     function bukaModalAdmin() {
@@ -1571,26 +2056,15 @@ function jsonResponse(obj) {
       const currentVal = select.value || targetTokoAdminTerpilih || '__DEFAULT__';
       select.innerHTML = '<option value="__DEFAULT__">🌐 Default (Semua Toko)</option>';
 
-      // Kumpulkan semua nama toko unik dari database user dan sheet config
-      const listToko = new Map();
       daftarUsersGlobal.forEach(u => {
-        if (u.namaToko && u.namaToko.toLowerCase() !== 'admin') {
-          listToko.set(u.namaToko, u.username ? `(${u.username})` : '');
+        if (u.role !== 'admin' && u.username !== '__DEFAULT__') {
+          const cfg = multiConfigGudang[u.namaToko || u.username];
+          const hasCustom = cfg && (cfg.statusOperasional || cfg.jamBuka || cfg.judulPengumuman);
+          const opt = document.createElement('option');
+          opt.value = u.namaToko || u.username;
+          opt.innerText = `${u.namaToko || u.username} ${hasCustom ? '⭐ [Aturan Khusus]' : ''}`;
+          select.appendChild(opt);
         }
-      });
-      Object.keys(multiConfigGudang).forEach(k => {
-        if (k !== '__DEFAULT__' && !listToko.has(k)) {
-          listToko.set(k, '');
-        }
-      });
-
-      listToko.forEach((info, toko) => {
-        const cfgToko = multiConfigGudang[toko];
-        const isKhusus = !!cfgToko;
-        const opt = document.createElement('option');
-        opt.value = toko;
-        opt.innerText = `${toko} ${info} ${isKhusus ? '⭐ [Aturan Khusus]' : ''}`;
-        select.appendChild(opt);
       });
 
       select.value = currentVal;
@@ -1605,7 +2079,7 @@ function jsonResponse(obj) {
       const typeLabel = document.getElementById('labelTokoConfigType');
 
       const activeCfg = isDefault ? 
-        (multiConfigGudang['__DEFAULT__'] || DEFAULT_CONFIG_GUDANG) : 
+        DEFAULT_CONFIG_GUDANG : 
         getConfigUntukToko(target);
 
       document.getElementById('cfgStatusOperasional').value = activeCfg.statusOperasional || 'normal';
@@ -1626,7 +2100,7 @@ function jsonResponse(obj) {
         ketEl.innerText = 'Mengatur informasi default untuk semua toko yang tidak memiliki jadwal khusus.';
         btnReset.classList.add('hidden');
       } else {
-        const hasCustom = !!multiConfigGudang[target];
+        const hasCustom = activeCfg.isCustom;
         if (typeLabel) {
           if (hasCustom) {
             typeLabel.className = 'text-pink font-bold';
@@ -1649,26 +2123,25 @@ function jsonResponse(obj) {
       const btn = document.getElementById('btnSimpanConfig');
       const alertBox = document.getElementById('alertAdminPanel');
       const target = targetTokoAdminTerpilih;
+      if(!target) return;
 
       const payloadConfig = {
         statusOperasional: document.getElementById('cfgStatusOperasional').value,
         judulPengumuman: document.getElementById('cfgJudulPengumuman').value.trim(),
-        jamBuka: document.getElementById('cfgJamBuka').value.trim() || DEFAULT_CONFIG_GUDANG.jamBuka,
-        hariLibur: document.getElementById('cfgHariLibur').value.trim() || DEFAULT_CONFIG_GUDANG.hariLibur,
-        cutOffJam: document.getElementById('cfgCutOffJam').value.trim() || DEFAULT_CONFIG_GUDANG.cutOffJam,
-        cutOffDesc: document.getElementById('cfgCutOffDesc').value.trim() || DEFAULT_CONFIG_GUDANG.cutOffDesc,
-        catatanGudang: document.getElementById('cfgCatatanGudang').value.trim() || DEFAULT_CONFIG_GUDANG.catatanGudang,
-        nomorWaAdmin: document.getElementById('cfgNomorWa').value.trim() || DEFAULT_CONFIG_GUDANG.nomorWaAdmin,
-        nomorTelAdmin: document.getElementById('cfgNomorTel').value.trim() || DEFAULT_CONFIG_GUDANG.nomorTelAdmin
+        jamBuka: document.getElementById('cfgJamBuka').value.trim(),
+        hariLibur: document.getElementById('cfgHariLibur').value.trim(),
+        cutOffJam: document.getElementById('cfgCutOffJam').value.trim(),
+        cutOffDesc: document.getElementById('cfgCutOffDesc').value.trim(),
+        catatanGudang: document.getElementById('cfgCatatanGudang').value.trim(),
+        nomorWaAdmin: document.getElementById('cfgNomorWa').value.trim(),
+        nomorTelAdmin: document.getElementById('cfgNomorTel').value.trim()
       };
 
-      // Simpan ke memori lokal terlebih dahulu
       multiConfigGudang[target] = payloadConfig;
-      localStorage.setItem('duta_abadi_multi_config', JSON.stringify(multiConfigGudang));
       renderPapanInfoGudang();
 
       btn.disabled = true;
-      btn.innerHTML = `<span class="inline-block animate-spin mr-1">◌</span> Menyimpan ke Spreadsheet...`;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1">◌</span> Menyimpan...`;
 
       try {
         const resFetch = await fetch(API_URL, {
@@ -1680,25 +2153,28 @@ function jsonResponse(obj) {
           }),
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }
         });
-        const res = await resFetch.json();
+        await resFetch.json();
 
         btn.disabled = false;
         btn.innerHTML = `<i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i><span>Simpan ke Spreadsheet</span>`;
         lucide.createIcons();
 
         alertBox.className = 'text-xs p-2.5 rounded-xl border border-leaf/40 bg-leaf/10 text-emerald-300 block font-mono';
-        alertBox.innerText = `✓ Berhasil tersimpan di Spreadsheet untuk target: ${target === '__DEFAULT__' ? 'Semua Toko' : target}`;
+        alertBox.innerText = `✓ Berhasil tersimpan di profil: ${target === '__DEFAULT__' ? 'Semua Toko' : target}`;
         alertBox.classList.remove('hidden');
 
-        populasiTargetTokoDropdown();
+        fetch(`${API_URL}?action=getUsers`).then(r => r.json()).then(res => {
+          if (res.success) {
+            daftarUsersGlobal = res.data;
+            localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+          }
+        });
       } catch (err) {
-        console.warn('Gagal menyimpan langsung ke Spreadsheet (tetap tersimpan di cache lokal):', err);
         btn.disabled = false;
         btn.innerHTML = `<i data-lucide="cloud-upload" class="w-3.5 h-3.5"></i><span>Simpan ke Spreadsheet</span>`;
         lucide.createIcons();
-
         alertBox.className = 'text-xs p-2.5 rounded-xl border border-gold/40 bg-gold/10 text-amber-300 block font-mono';
-        alertBox.innerText = `Tersimpan secara lokal. Gagal terhubung langsung ke Apps Script (${err.message || 'Jaringan'}).`;
+        alertBox.innerText = `Tersimpan secara lokal. Gagal terhubung ke server.`;
         alertBox.classList.remove('hidden');
       }
     }
@@ -1709,20 +2185,23 @@ function jsonResponse(obj) {
 
       triggerHaptic(30);
       delete multiConfigGudang[targetTokoAdminTerpilih];
-      localStorage.setItem('duta_abadi_multi_config', JSON.stringify(multiConfigGudang));
-
+      
       try {
         await fetch(API_URL, {
           method: 'POST',
           body: JSON.stringify({ action: 'deleteConfig', targetToko: targetTokoAdminTerpilih }),
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }
         });
-      } catch (e) {
-        console.warn('Gagal sinkronisasi hapus ke spreadsheet:', e);
-      }
+      } catch (e) {}
 
-      populasiTargetTokoDropdown();
-      renderPapanInfoGudang();
+      fetch(`${API_URL}?action=getUsers`).then(r => r.json()).then(res => {
+        if (res.success) {
+          daftarUsersGlobal = res.data;
+          localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+          populasiTargetTokoDropdown();
+          renderPapanInfoGudang();
+        }
+      });
     }
 
     async function muatUlangConfigDariServer() {
@@ -1732,7 +2211,17 @@ function jsonResponse(obj) {
       alertBox.innerText = 'Menarik konfigurasi terbaru dari Google Sheets...';
       alertBox.classList.remove('hidden');
 
-      await sinkronisasiConfigDariSpreadsheet();
+      try {
+        const response = await fetch(`${API_URL}?action=getUsers`, { method: 'GET' });
+        const res = await response.json();
+        if (res.success && res.data) {
+          daftarUsersGlobal = res.data;
+          localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+          buildMultiConfig();
+          renderPapanInfoGudang();
+          populasiTargetTokoDropdown();
+        }
+      } catch (e) {}
 
       alertBox.className = 'text-xs p-2.5 rounded-xl border border-leaf/40 bg-leaf/10 text-emerald-300 block font-mono';
       alertBox.innerText = '✓ Konfigurasi mutakhir berhasil disinkronkan!';
@@ -1749,13 +2238,13 @@ function jsonResponse(obj) {
         if (res.success && res.data) {
           daftarUsersGlobal = res.data;
           localStorage.setItem('duta_abadi_cached_users', JSON.stringify(daftarUsersGlobal));
+          buildMultiConfig();
           renderDaftarUserAdmin();
           populasiTargetTokoDropdown();
         } else {
           renderDaftarUserAdmin();
         }
       } catch (err) {
-        console.warn('Gagal memuat user dari server, menggunakan cache lokal:', err);
         renderDaftarUserAdmin();
       }
     }
@@ -1763,10 +2252,12 @@ function jsonResponse(obj) {
     function renderDaftarUserAdmin() {
       const container = document.getElementById('listUsersContainer');
       const countLabel = document.getElementById('labelTotalUserCount');
-      countLabel.innerText = `(${daftarUsersGlobal.length})`;
+      
+      const realUsers = daftarUsersGlobal.filter(u => u.username !== '__DEFAULT__');
+      countLabel.innerText = `(${realUsers.length})`;
 
       container.innerHTML = '';
-      if (daftarUsersGlobal.length === 0) {
+      if (realUsers.length === 0) {
         container.innerHTML = `
           <div class="p-4 text-center text-xs font-mono text-soft rounded-2xl bg-white/[0.02] border border-white/5">
             Belum ada akun toko di database Spreadsheet.
@@ -1775,7 +2266,7 @@ function jsonResponse(obj) {
         return;
       }
 
-      daftarUsersGlobal.forEach((u, index) => {
+      realUsers.forEach((u) => {
         const card = document.createElement('div');
         const isAdminRole = (u.role || '').toLowerCase() === 'admin';
         card.className = "p-3 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-2 hover:bg-white/[0.06] transition-colors";
@@ -1814,6 +2305,9 @@ function jsonResponse(obj) {
       document.getElementById('formUserPassword').value = user.password;
       document.getElementById('formUserNamaToko').value = user.namaToko || user.username;
       document.getElementById('formUserRole').value = (user.role || 'user').toLowerCase();
+      document.getElementById('formUserIzinGrosir').checked = !!user.izinGrosir;
+      document.getElementById('formUserIzinRitel').checked = !!user.izinRitel;
+      document.getElementById('formUserIzinDiskon').checked = !!user.izinDiskon;
 
       document.getElementById('formUserTitle').innerHTML = `<i data-lucide="pencil" class="w-3.5 h-3.5 text-gold"></i><span>Edit Akun Toko: ${escapeHtml(user.username)}</span>`;
       document.getElementById('btnSubmitUserLabel').innerText = 'Perbarui Akun di Spreadsheet';
@@ -1829,6 +2323,9 @@ function jsonResponse(obj) {
       document.getElementById('formUserPassword').value = '';
       document.getElementById('formUserNamaToko').value = '';
       document.getElementById('formUserRole').value = 'user';
+      document.getElementById('formUserIzinGrosir').checked = false;
+      document.getElementById('formUserIzinRitel').checked = false;
+      document.getElementById('formUserIzinDiskon').checked = false;
 
       document.getElementById('formUserTitle').innerHTML = `<i data-lucide="user-plus" class="w-3.5 h-3.5 text-pink"></i><span>Tambah Akun Toko Baru</span>`;
       document.getElementById('btnSubmitUserLabel').innerText = 'Simpan User ke Spreadsheet';
@@ -1844,6 +2341,9 @@ function jsonResponse(obj) {
       const password = document.getElementById('formUserPassword').value.trim();
       const namaToko = document.getElementById('formUserNamaToko').value.trim();
       const role = document.getElementById('formUserRole').value;
+      const izinGrosir = document.getElementById('formUserIzinGrosir').checked;
+      const izinRitel = document.getElementById('formUserIzinRitel').checked;
+      const izinDiskon = document.getElementById('formUserIzinDiskon').checked;
       const btn = document.getElementById('btnSubmitUser');
       const alertBox = document.getElementById('alertAdminPanel');
 
@@ -1852,9 +2352,10 @@ function jsonResponse(obj) {
         return;
       }
 
-      const userObj = { username, password, namaToko, role, status: 'Aktif' };
+      const userObj = { 
+        username, password, namaToko, role, izinGrosir, izinRitel, izinDiskon, status: 'Aktif' 
+      };
 
-      // Optimistic update pada memori lokal
       if (mode === 'create') {
         const exists = daftarUsersGlobal.some(u => u.username.toLowerCase() === username.toLowerCase());
         if (exists) {
@@ -1877,10 +2378,7 @@ function jsonResponse(obj) {
         const resFetch = await fetch(API_URL, {
           method: 'POST',
           body: JSON.stringify({
-            action: 'saveUser',
-            user: userObj,
-            mode: mode,
-            originalUsername: originalUsername
+            action: 'saveUser', user: userObj, mode: mode, originalUsername: originalUsername
           }),
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }
         });
@@ -1893,11 +2391,11 @@ function jsonResponse(obj) {
         if (res.success) {
           resetFormUserAdmin();
           alertBox.className = 'text-xs p-2.5 rounded-xl border border-leaf/40 bg-leaf/10 text-emerald-300 block font-mono';
-          alertBox.innerText = `✓ Akun ${username} berhasil disimpan di Google Sheets!`;
+          alertBox.innerText = `✓ Akun ${username} berhasil disimpan!`;
           alertBox.classList.remove('hidden');
         } else {
           alertBox.className = 'text-xs p-2.5 rounded-xl border border-gold/40 bg-gold/10 text-amber-300 block font-mono';
-          alertBox.innerText = res.message || 'Tersimpan lokal, periksa deployment Apps Script.';
+          alertBox.innerText = res.message || 'Tersimpan lokal, periksa koneksi.';
           alertBox.classList.remove('hidden');
         }
       } catch (err) {
@@ -1906,7 +2404,7 @@ function jsonResponse(obj) {
         lucide.createIcons();
         resetFormUserAdmin();
         alertBox.className = 'text-xs p-2.5 rounded-xl border border-gold/40 bg-gold/10 text-amber-300 block font-mono';
-        alertBox.innerText = 'Akun tersimpan di memori perangkat. Akan disinkronkan saat terhubung.';
+        alertBox.innerText = 'Akun tersimpan di lokal. Akan disinkronkan saat terhubung.';
         alertBox.classList.remove('hidden');
       }
     }
@@ -1926,23 +2424,23 @@ function jsonResponse(obj) {
           body: JSON.stringify({ action: 'deleteUser', username: username }),
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }
         });
-      } catch (err) {
-        console.warn('Gagal menghapus user di server:', err);
-      }
+      } catch (err) { }
     }
 
     function salinKodeAppsScript() {
       triggerHaptic(25);
       const code = document.getElementById('codeAppsScriptBlock').innerText;
-      const btn = document.getElementById('btnSalinScript');
-
+      
+      const decodedCode = code.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      
       const temp = document.createElement('textarea');
-      temp.value = code;
+      temp.value = decodedCode;
       document.body.appendChild(temp);
       temp.select();
       document.execCommand('copy');
       document.body.removeChild(temp);
 
+      const btn = document.getElementById('btnSalinScript');
       btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-leaf"></i><span>Tersalin!</span>`;
       lucide.createIcons();
       setTimeout(() => {
@@ -2003,12 +2501,11 @@ function jsonResponse(obj) {
       triggerHaptic(25);
       viewMode = viewMode === 'mobile' ? 'desktop' : 'mobile';
 
-      // Animate the button icon with a pop/rotation effect
       const btn = document.getElementById('btnToggleViewMode');
       const icon = document.getElementById('modeIcon');
       if (btn && icon) {
         icon.classList.remove('mode-icon-spin');
-        void icon.offsetWidth; // Trigger reflow for animation restart
+        void icon.offsetWidth;
         icon.classList.add('mode-icon-spin');
       }
 
@@ -2029,7 +2526,6 @@ function jsonResponse(obj) {
       const modeIcon = document.getElementById('modeIcon');
       const modeLabel = document.getElementById('modeLabel');
 
-      // Trigger enter animation on the content when switched manually
       if (animated && wrapper) {
         wrapper.classList.remove('animate-mode-switch');
         tabViewHistory.classList.remove('animate-mode-switch');
@@ -2039,14 +2535,10 @@ function jsonResponse(obj) {
       }
 
       if (isDesktop) {
-        // Desktop Layout configuration
         mainContainer.className = "relative z-10 flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-16 transition-all duration-300";
-
-        // Smoothly hide bottom navigation bar (slide down and fade out)
         bottomNav.classList.remove('translate-y-0', 'opacity-100');
         bottomNav.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
 
-        // Smoothly reveal desktop top navigation bar (slide down and fade in)
         desktopTabs.classList.remove('hidden');
         requestAnimationFrame(() => {
           desktopTabs.classList.remove('opacity-0', '-translate-y-3');
@@ -2056,35 +2548,20 @@ function jsonResponse(obj) {
         modeIcon.setAttribute('data-lucide', 'monitor');
         modeLabel.innerText = 'Desktop';
 
-        // In desktop mode, we split Katalog and Keranjang side-by-side if order tab is active!
         wrapper.className = "grid grid-cols-1 lg:grid-cols-12 gap-5 items-start transition-all duration-300";
         tabViewOrder.className = "lg:col-span-7 space-y-4";
         tabViewCart.className = "lg:col-span-5 space-y-4";
 
-        if (activeTab === 'history') {
-          wrapper.classList.add('hidden');
-          tabViewHistory.classList.remove('hidden');
-        } else {
-          wrapper.classList.remove('hidden');
-          tabViewOrder.classList.remove('hidden');
-          tabViewCart.classList.remove('hidden');
-          tabViewHistory.classList.add('hidden');
-        }
-
-        // Hide floating cart pill in desktop as cart is already pinned beside catalog
+        switchTab(activeTab);
         floatingCart.classList.add('hidden');
       } else {
-        // Mobile Layout configuration
         mainContainer.className = "relative z-10 flex-1 w-full max-w-md mx-auto px-3.5 pt-3 pb-28 transition-all duration-300";
-
-        // Smoothly hide desktop top navigation bar
         desktopTabs.classList.remove('opacity-100', 'translate-y-0');
         desktopTabs.classList.add('opacity-0', '-translate-y-3');
         setTimeout(() => {
           if (viewMode === 'mobile') desktopTabs.classList.add('hidden');
         }, 300);
 
-        // Smoothly reveal mobile bottom navigation bar
         bottomNav.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
         bottomNav.classList.add('translate-y-0', 'opacity-100');
 
@@ -2105,18 +2582,15 @@ function jsonResponse(obj) {
     function updateDesktopNavButtons() {
       const btnOrder = document.getElementById('desktopTabBtnOrder');
       const btnHistory = document.getElementById('desktopTabBtnHistory');
-      if (!btnOrder || !btnHistory) return;
+      const btnStock = document.getElementById('desktopTabBtnStock');
+      if (!btnOrder || !btnHistory || !btnStock) return;
 
       const activeClass = "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-display font-semibold transition-all bg-slate-900 text-white dark:bg-white dark:text-ink shadow-sm tap-press";
       const inactiveClass = "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-display font-semibold transition-all text-slate-500 dark:text-soft hover:text-slate-900 dark:hover:text-white tap-press";
 
-      if (activeTab === 'history') {
-        btnHistory.className = activeClass;
-        btnOrder.className = inactiveClass;
-      } else {
-        btnOrder.className = activeClass;
-        btnHistory.className = inactiveClass;
-      }
+      btnOrder.className = (activeTab === 'order' || activeTab === 'cart') ? activeClass : inactiveClass;
+      btnHistory.className = activeTab === 'history' ? activeClass : inactiveClass;
+      btnStock.className = activeTab === 'stock' ? activeClass : inactiveClass;
     }
 
     function escapeHtml(str) {
@@ -2239,42 +2713,49 @@ function jsonResponse(obj) {
       const tabOrder = document.getElementById('tabViewOrder');
       const tabCart = document.getElementById('tabViewCart');
       const tabHistory = document.getElementById('tabViewHistory');
+      const tabStock = document.getElementById('tabViewStock');
+
+      wrapper.classList.add('hidden');
+      tabHistory.classList.add('hidden');
+      tabStock.classList.add('hidden');
 
       if (isDesktop) {
         if (tab === 'history') {
-          wrapper.classList.add('hidden');
           tabHistory.classList.remove('hidden');
           loadRiwayat();
+        } else if (tab === 'stock') {
+          tabStock.classList.remove('hidden');
         } else {
           wrapper.classList.remove('hidden');
           tabOrder.classList.remove('hidden');
           tabCart.classList.remove('hidden');
-          tabHistory.classList.add('hidden');
         }
         updateDesktopNavButtons();
-      } else {
-        wrapper.classList.remove('hidden');
-        tabOrder.classList.toggle('hidden', tab !== 'order');
-        tabCart.classList.toggle('hidden', tab !== 'cart');
-        tabHistory.classList.toggle('hidden', tab !== 'history');
+      } else { 
+        if (tab === 'order' || tab === 'cart') {
+          wrapper.classList.remove('hidden');
+          tabOrder.classList.toggle('hidden', tab !== 'order');
+          tabCart.classList.toggle('hidden', tab !== 'cart');
+        } else if (tab === 'history') {
+          tabHistory.classList.remove('hidden');
+          loadRiwayat();
+        } else if (tab === 'stock') {
+          tabStock.classList.remove('hidden');
+        }
 
-        // Update Bottom Tab Bar Active Styles
-        const navOrder = document.getElementById('navBtnOrder');
-        const navCart = document.getElementById('navBtnCart');
-        const navHistory = document.getElementById('navBtnHistory');
-
+        const tabs = ['navBtnOrder', 'navBtnCart', 'navBtnHistory', 'navBtnStock'];
         const activeClass = "flex flex-col items-center justify-center py-2 px-2 rounded-2xl bg-white/15 dark:bg-white/10 text-pink dark:text-pink font-semibold shadow-sm transition-all duration-200 tap-press";
         const inactiveClass = "flex flex-col items-center justify-center py-2 px-2 rounded-2xl text-slate-500 dark:text-soft hover:text-zinc-900 dark:hover:text-white transition-all duration-200 tap-press";
-
-        navOrder.className = tab === 'order' ? activeClass : inactiveClass;
-        navCart.className = (tab === 'cart' ? activeClass : inactiveClass) + " relative";
-        navHistory.className = tab === 'history' ? activeClass : inactiveClass;
+        
+        tabs.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            const isMatch = id.toLowerCase().includes(tab);
+            el.className = isMatch ? (id === 'navBtnCart' ? activeClass + " relative" : activeClass) : (id === 'navBtnCart' ? inactiveClass + " relative" : inactiveClass);
+          }
+        });
 
         updateFloatingCartVisibility();
-
-        if (tab === 'history') {
-          loadRiwayat();
-        }
       }
 
       lucide.createIcons();
@@ -2332,16 +2813,16 @@ function jsonResponse(obj) {
           alertBox.classList.add('hidden');
           namaTokoAktif = res.namaToko || user;
 
-          // Deteksi hak akses admin dari username atau respons payload backend
-          isAdmin = (
-            user.toLowerCase() === 'admin' ||
-            (res.role && String(res.role).toLowerCase() === 'admin') ||
-            (res.isAdmin === true) ||
-            String(namaTokoAktif).toLowerCase().includes('admin')
-          );
+          isAdmin = res.isAdmin === true || user.toLowerCase() === 'admin';
+          userIzinGrosir = !!res.izinGrosir;
+          userIzinRitel = !!res.izinRitel;
+          userIzinDiskon = !!res.izinDiskon;
 
           localStorage.setItem('loginToko', namaTokoAktif);
           localStorage.setItem('loginIsAdmin', isAdmin ? 'true' : 'false');
+          localStorage.setItem('loginIzinGrosir', userIzinGrosir ? 'true' : 'false');
+          localStorage.setItem('loginIzinRitel', userIzinRitel ? 'true' : 'false');
+          localStorage.setItem('loginIzinDiskon', userIzinDiskon ? 'true' : 'false');
 
           triggerHaptic(50);
           bukaAplikasi(namaTokoAktif, isAdmin);
@@ -2373,24 +2854,15 @@ function jsonResponse(obj) {
       document.getElementById('btnLogoutTop').classList.remove('hidden');
       document.getElementById('btnLogoutTop').classList.add('inline-flex');
 
-      // Tampilkan tombol admin jika pengguna berwenang
       const btnAdminHeader = document.getElementById('btnAdminPanel');
-      const btnEditInfo = document.getElementById('btnEditInfoAdmin');
       if (isAdmin) {
         if (btnAdminHeader) {
           btnAdminHeader.classList.remove('hidden');
           btnAdminHeader.classList.add('inline-flex');
         }
-        if (btnEditInfo) {
-          btnEditInfo.classList.remove('hidden');
-          btnEditInfo.classList.add('inline-flex');
-        }
       } else {
         if (btnAdminHeader) btnAdminHeader.classList.add('hidden');
-        if (btnEditInfo) btnEditInfo.classList.add('hidden');
       }
-
-      renderPapanInfoGudang();
 
       const inputBarang = document.getElementById('inputBarang');
       inputBarang.disabled = true;
@@ -2410,48 +2882,18 @@ function jsonResponse(obj) {
         console.error(err);
         inputBarang.placeholder = "Gagal memuat katalog barang.";
       }
+
       try {
-      const savedCart = localStorage.getItem('keranjang_tersimpan');
-      if (savedCart) {
-        keranjang = JSON.parse(savedCart);
-        renderKeranjang(); // Tampilkan isinya
-      }
-    } catch (e) {
-      console.error("Gagal memuat keranjang:", e);
-    }
+        const savedCart = localStorage.getItem('keranjang_tersimpan');
+        if (savedCart) {
+          keranjang = JSON.parse(savedCart);
+          renderKeranjang();
+        }
+      } catch (e) {}
+
+      fetchRiwayatBackground();
       lucide.createIcons();
       switchTab('order');
-    }
-
-    function konfirmasiLogout() {
-      if (window.confirm("Keluar dari sesi toko " + namaTokoAktif + "?")) {
-        logout();
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem('loginToko');
-      localStorage.removeItem('loginIsAdmin');
-      localStorage.removeItem('keranjang_tersimpan');
-      namaTokoAktif = "";
-      isAdmin = false;
-      keranjang = [];
-      selectedItemObj = null;
-      document.getElementById('loginUsername').value = "";
-      document.getElementById('loginPassword').value = "";
-      document.getElementById('headerStoreBadge').classList.add('hidden');
-      document.getElementById('headerStoreBadge').classList.remove('inline-flex');
-      document.getElementById('btnLogoutTop').classList.add('hidden');
-      document.getElementById('btnLogoutTop').classList.remove('inline-flex');
-
-      const btnAdminHeader = document.getElementById('btnAdminPanel');
-      const btnEditInfo = document.getElementById('btnEditInfoAdmin');
-      if (btnAdminHeader) btnAdminHeader.classList.add('hidden');
-      if (btnEditInfo) btnEditInfo.classList.add('hidden');
-
-      document.getElementById('pageMainApp').classList.add('hidden');
-      document.getElementById('pageLogin').classList.remove('hidden');
-      renderKeranjang();
     }
 
     /* =====================================================================
@@ -2485,7 +2927,6 @@ function jsonResponse(obj) {
       const cleanQuery = query.toLowerCase().trim();
       if (!cleanQuery) return [];
 
-      // Pecah pencarian menjadi token-token kata parsial
       const tokens = cleanQuery.split(/\s+/).filter(Boolean);
       if (tokens.length === 0) return [];
 
@@ -2500,11 +2941,9 @@ function jsonResponse(obj) {
         const barcode = String(item.barcode || '').toLowerCase();
         const fullString = `${id} ${nama} ${barcode}`;
 
-        // Cek apakah SEMUA token parsial ada di dalam data barang (logika AND parsial)
         const cocokSemuaToken = tokens.every(token => fullString.includes(token));
 
         if (cocokSemuaToken) {
-          // Hitung bobot relevansi agar hasil paling pas muncul paling atas
           let score = 0;
           if (nama === cleanQuery || id === cleanQuery) score += 100;
           else if (nama.startsWith(cleanQuery) || id.startsWith(cleanQuery)) score += 60;
@@ -2515,7 +2954,6 @@ function jsonResponse(obj) {
         }
       }
 
-      // Urutkan berdasarkan skor relevansi tertinggi
       hasil.sort((a, b) => b.score - a.score);
       return hasil;
     }
@@ -2618,7 +3056,7 @@ function jsonResponse(obj) {
     }
 
     /* =====================================================================
-       WAREHOUSE SHORTCUT ACTIONS (WHATSAPP & PHONE CALL)
+       WAREHOUSE SHORTCUT ACTIONS
        ===================================================================== */
     function hubungiAdminGudang(tipe = 'wa') {
       triggerHaptic(30);
@@ -2632,7 +3070,6 @@ function jsonResponse(obj) {
         return;
       }
 
-      // Format pesan ramah dan langsung mengidentifikasi nama toko pemesan
       const pesan = `Halo Admin Gudang Duta Abadi, saya dari *${namaToko}* ingin menanyakan perihal ketersediaan stok / pengiriman barang pesanan kami. Mohon bantuannya ya. Terima kasih!`;
       const urlWA = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodeURIComponent(pesan)}`;
       window.open(urlWA, '_blank');
@@ -2736,7 +3173,6 @@ function jsonResponse(obj) {
       const totalRagam = keranjang.length;
       const totalPcs = keranjang.reduce((acc, curr) => acc + curr.jumlah, 0);
 
-      // Badge in navigation
       if (totalPcs > 0) {
         badgeNav.innerText = totalPcs > 99 ? '99+' : totalPcs;
         badgeNav.classList.remove('hidden');
@@ -2877,6 +3313,7 @@ function jsonResponse(obj) {
         if (res.success) {
           dataRiwayatGlobal = res.data;
           renderRiwayatList();
+          updateDashboardCounts();
         } else {
           alertBox.className = 'text-xs font-mono p-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 block';
           alertBox.innerText = res.message || 'Gagal memuat riwayat.';
@@ -3065,14 +3502,12 @@ function jsonResponse(obj) {
 
       const htmlContent = `
         <div style="width: 100%; font-family: 'Courier New', Courier, monospace; color: #000; font-size: 11px; line-height: 1.3;">
-          <!-- Header POS Thermal -->
           <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;">
             <div style="font-size: 14px; font-weight: bold; letter-spacing: 0.5px;">DUTA ABADI GROSIR</div>
             <div style="font-size: 10px; margin-top: 1px; font-weight: bold;">SURAT JALAN & ORDER GUDANG</div>
             <div style="font-size: 10px; letter-spacing: -1px; margin-top: 2px;">================================</div>
           </div>
 
-          <!-- Metadata Order -->
           <div style="margin-bottom: 5px; font-size: 10px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 1px;">
               <span>No. Resi:</span>
@@ -3092,18 +3527,15 @@ function jsonResponse(obj) {
             </div>` : ''}
           </div>
 
-          <!-- Header Kolom Barang -->
           <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 10px; padding: 2px 0; border-top: 1px dashed #000; border-bottom: 1px solid #000; margin-bottom: 3px;">
             <span>PRODUK / ID</span>
             <span>KUANTITAS</span>
           </div>
 
-          <!-- Daftar Barang -->
           <div style="margin-bottom: 5px;">
             ${itemsRowsHtml}
           </div>
 
-          <!-- Total Ringkasan -->
           <div style="border-top: 1px solid #000; border-bottom: 1px dashed #000; padding: 4px 0; margin-bottom: 6px;">
             <div style="display: flex; justify-content: space-between; font-size: 10px;">
               <span>Total Variasi:</span>
@@ -3115,7 +3547,6 @@ function jsonResponse(obj) {
             </div>
           </div>
 
-          <!-- Kolom Tanda Tangan Kurir & Toko -->
           <div style="display: flex; justify-content: space-between; text-align: center; font-size: 9px; margin-top: 6px; margin-bottom: 8px;">
             <div style="width: 48%;">
               <div>Toko Penerima,</div>
@@ -3129,7 +3560,6 @@ function jsonResponse(obj) {
             </div>
           </div>
 
-          <!-- Footer Thermal -->
           <div style="text-align: center; font-size: 9px; border-top: 1px dashed #000; padding-top: 4px;">
             <div>*** TERIMA KASIH ***</div>
             <div>Cocokkan koli fisik saat kurir tiba</div>
@@ -3280,6 +3710,85 @@ function jsonResponse(obj) {
           isFlashOn = !isFlashOn;
         }
       }
+    }
+
+    /* =====================================================================
+       STOCK TAB & FORMATTING LOGIC
+       ===================================================================== */
+    function formatRupiah(angka) {
+      if (!angka && angka !== 0) return 'Rp -';
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+    }
+
+    let timerCekStok = null;
+    function renderHasilCekStok(keyword) {
+      clearTimeout(timerCekStok);
+      const container = document.getElementById('listHasilCekStok');
+      const tokens = keyword.toLowerCase().split(/\s+/).filter(Boolean);
+      
+      if (!keyword.trim()) {
+        container.innerHTML = `<div class="text-center py-10 text-soft text-xs font-mono border border-line border-dashed rounded-3xl bg-white/[0.02]">Ketik nama barang untuk melihat ketersediaan...</div>`;
+        return;
+      }
+
+      container.innerHTML = `<div class="text-center py-8 text-soft text-xs font-mono"><i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto opacity-50 mb-2"></i>Mencari...</div>`;
+      lucide.createIcons();
+
+      timerCekStok = setTimeout(() => {
+        const hasilPencarian = cariBarangParsial(keyword, false);
+        
+        if (hasilPencarian.length === 0) {
+          container.innerHTML = `<div class="text-center py-10 text-soft text-xs font-mono border border-line border-dashed rounded-3xl bg-white/[0.02]">Barang tidak ditemukan 🧐</div>`;
+          return;
+        }
+        
+        container.innerHTML = '';
+        hasilPencarian.slice(0, 50).forEach(({ item }) => {
+          const inStock = item.stok > 0;
+          const namaUpper = String(item.nama || '').toUpperCase();
+          
+          const showGrosir = isAdmin || userIzinGrosir;
+          const showRitel = isAdmin || userIzinRitel;
+          const showDiskon = isAdmin || userIzinDiskon;
+          
+          let infoTambahan = '';
+          if (showGrosir || showRitel || showDiskon) {
+            infoTambahan = `<div class="mt-3 pt-2.5 border-t border-line/40 flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] font-mono">`;
+            
+            if (showGrosir) {
+              const hargaGrosirVal = (item.hargaGrosir !== undefined) ? item.hargaGrosir : (item.harga || null);
+              infoTambahan += `<span class="text-gold">Grosir: <strong class="text-white">${formatRupiah(hargaGrosirVal)}</strong></span>`;
+            }
+            if (showRitel) {
+              const hargaRitelVal = (item.hargaRitel !== undefined) ? item.hargaRitel : (item.ritel || null);
+              infoTambahan += `<span class="text-sky-300">Ritel: <strong class="text-white">${formatRupiah(hargaRitelVal)}</strong></span>`;
+            }
+            if (showDiskon) {
+              const diskonVal = item.diskon ? item.diskon : '0';
+              infoTambahan += `<span class="text-pink bg-pink/10 px-2 py-0.5 rounded-md ml-auto">Disc: <strong>${diskonVal}%</strong></span>`;
+            }
+            infoTambahan += `</div>`;
+          }
+          
+          const card = document.createElement('div');
+          card.className = `liquid-glass rounded-2xl p-4 bg-panel/70 border border-line shadow-md transition-colors ${!inStock ? 'opacity-50 grayscale-[30%]' : ''}`;
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <span class="text-[10px] font-mono text-soft uppercase bg-white/5 border border-white/10 px-2 py-0.5 rounded-md shadow-inner">SKU: ${highlightMatch(item.id, tokens)}</span>
+                <h4 class="text-sm font-bold text-white leading-snug mt-1.5">${highlightMatch(namaUpper, tokens)}</h4>
+              </div>
+              <div class="text-right shrink-0 bg-ink/50 px-3 py-1.5 rounded-xl border border-line shadow-inner">
+                 <span class="block text-lg font-bold font-mono leading-none ${inStock ? 'text-leaf' : 'text-red-400'}">${item.stok}</span>
+                 <span class="text-[9px] text-soft uppercase tracking-widest mt-0.5 block">Pcs</span>
+              </div>
+            </div>
+            ${infoTambahan}
+          `;
+          container.appendChild(card);
+        });
+        lucide.createIcons();
+      }, 250);
     }
   </script>
 </body>
