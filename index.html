@@ -2410,6 +2410,19 @@ function jsonResponse(obj) {
         console.error(err);
         inputBarang.placeholder = "Gagal memuat katalog barang.";
       }
+      try {
+      const savedCart = localStorage.getItem('keranjang_tersimpan');
+      if (savedCart) {
+        keranjang = JSON.parse(savedCart);
+        renderKeranjang(); // Tampilkan isinya
+      }
+    } catch (e) {
+      console.error("Gagal memuat keranjang:", e);
+    }
+
+    lucide.createIcons();
+    switchTab('order');
+}
       lucide.createIcons();
       switchTab('order');
     }
@@ -2717,6 +2730,7 @@ function jsonResponse(obj) {
     }
 
     function renderKeranjang() {
+      localStorage.setItem('keranjang_tersimpan', JSON.stringify(keranjang));
       const container = document.getElementById('bodyKeranjang');
       const badgeNav = document.getElementById('navCartBadge');
       const summaryRagam = document.getElementById('summaryRagam');
