@@ -2419,10 +2419,6 @@ function jsonResponse(obj) {
     } catch (e) {
       console.error("Gagal memuat keranjang:", e);
     }
-
-    lucide.createIcons();
-    switchTab('order');
-}
       lucide.createIcons();
       switchTab('order');
     }
@@ -2436,6 +2432,7 @@ function jsonResponse(obj) {
     function logout() {
       localStorage.removeItem('loginToko');
       localStorage.removeItem('loginIsAdmin');
+      localStorage.removeItem('keranjang_tersimpan');
       namaTokoAktif = "";
       isAdmin = false;
       keranjang = [];
