@@ -2213,8 +2213,8 @@ function jsonResponse(obj) {
       initConfigGudang();
       applyViewModeLayout();
       lucide.createIcons();
-      const sessionToko = sessionStorage.getItem('loginToko');
-      const sessionIsAdmin = sessionStorage.getItem('loginIsAdmin') === 'true';
+      const sessionToko = localStorage.getItem('loginToko');
+      const sessionIsAdmin = localStorage.getItem('loginIsAdmin') === 'true';
 
       if (sessionToko) {
         namaTokoAktif = sessionToko;
@@ -2340,8 +2340,8 @@ function jsonResponse(obj) {
             String(namaTokoAktif).toLowerCase().includes('admin')
           );
 
-          sessionStorage.setItem('loginToko', namaTokoAktif);
-          sessionStorage.setItem('loginIsAdmin', isAdmin ? 'true' : 'false');
+          localStorage.setItem('loginToko', namaTokoAktif);
+          localStorage.setItem('loginIsAdmin', isAdmin ? 'true' : 'false');
 
           triggerHaptic(50);
           bukaAplikasi(namaTokoAktif, isAdmin);
@@ -2421,8 +2421,8 @@ function jsonResponse(obj) {
     }
 
     function logout() {
-      sessionStorage.removeItem('loginToko');
-      sessionStorage.removeItem('loginIsAdmin');
+      localStorage.removeItem('loginToko');
+      localStorage.removeItem('loginIsAdmin');
       namaTokoAktif = "";
       isAdmin = false;
       keranjang = [];
